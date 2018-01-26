@@ -464,6 +464,19 @@ Just like with themes, I haven't found my font yet.
          (define-key elpy-mode-map (kbd key) nil))))
 #+END_SRC
 
+** Neotree
+Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+    :ensure t
+    :config
+    (global-set-key [f8] 'neotree-toggle)
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+
+  (use-package all-the-icons
+    :ensure t)
+#+END_SRC
+
 * Custom functions
 ** Emacs lisp
 *** Buffer

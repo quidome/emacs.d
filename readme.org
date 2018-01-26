@@ -190,6 +190,13 @@ Some extra stuff:
     (exec-path-from-shell-initialize))
 #+END_SRC
 
+** Mac OS X workarounds
+#+BEGIN_SRC emacs-lisp
+  ;; Mac OS X does not support --dired
+  (when is-mac
+    (setq dired-use-ls-dired nil))
+#+END_SRC
+
 * Keybindings
 
 #+BEGIN_QUOTE
@@ -349,19 +356,9 @@ Just like with themes, I haven't found my font yet.
 #+BEGIN_SRC emacs-lisp
   (use-package magit-gerrit
     :after magit
-    :ensure t
-    :config
-    (when (getenv "GERRIT_SSH_CREDS")
-      (setq-default magit-gerrit-ssh-creds (getenv "GERRIT_SSH_CREDS"))
-      (message magit-gerrit-ssh-creds)))
-
-  (defun turn-on-gerrit-mode ()
-    (set 'myremote (magit-gerrit-get-remote-url))
-    (when (string-match-p (getenv "GERRIT_SSH_SERVER") myremote)
-      (magit-gerrit-mode)))
-
-  (add-hook 'magit-mode-hook 'turn-on-gerrit-mode)
+    :ensure t)
 #+END_SRC
+
 ** Flycheck
 
 #+BEGIN_SRC emacs-lisp

@@ -258,12 +258,15 @@ I like using shift+arrows to move around:
 
 ** Themes
 
-I'm still searching for the perfect theme, going with monokai here
+Plan9 is a fine theme but I'd like
 #+BEGIN_SRC emacs-lisp
-  (use-package monokai-theme
+  (use-package plan9-theme
     :ensure t
     :config
-    (load-theme 'monokai t))
+    (custom-theme-set-faces
+     'plan9
+     `(org-level-1 ((t (:height 1.4 :weight bold :background "#E5E5D0"
+                                  :box (:line-width 1 :style released-button)))))))
 #+END_SRC
 
 ** Graphic/window elements
@@ -323,6 +326,19 @@ Just like with themes, I haven't found my font yet.
   (use-package yaml-mode
     :ensure t)
 #+END_SRC
+
+** Puppet
+#+BEGIN_SRC emacs-lisp
+  (use-package puppet-mode
+    :ensure t)
+#+END_SRC
+** Golang
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :ensure t
+    :mode ("\\.go" . go-mode)
+    )
+#+END_SRC
 * Minor modes
 ** Ivy and friends
 *** Ivy
@@ -374,7 +390,19 @@ Just like with themes, I haven't found my font yet.
 
     (setq flycheck-display-errors-function #'flycheck-display-error-messages-unless-error-list))
 #+END_SRC
-
+*** Flycheck yamllint
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-yamllint
+    :ensure t)
+#+END_SRC
+*** Flycheck bash
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-bashate
+    :ensure t
+    :after flycheck
+    :init
+    (flycheck-bashate-setup))
+#+END_SRC
 ** Alist
 
 #+BEGIN_SRC emacs-lisp
@@ -474,6 +502,18 @@ Thisone actually requires more work, see [[https://github.com/domtronn/all-the-i
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
   (use-package all-the-icons
+    :ensure t)
+#+END_SRC
+
+* Other packages
+** wgrep
+#+BEGIN_SRC emacs-lisp
+  (use-package wgrep
+    :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package wgrep-ag
     :ensure t)
 #+END_SRC
 

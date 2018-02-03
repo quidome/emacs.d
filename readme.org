@@ -65,9 +65,7 @@ The actual configuration starts here, let's start by writing a warning header.
 #+END_SRC
 
 * Package management
-
 ** Package sources
-
 #+BEGIN_SRC emacs-lisp
   ;; get packages working
   (require 'package)
@@ -77,14 +75,12 @@ The actual configuration starts here, let's start by writing a warning header.
 #+END_SRC
 
 ** Dependency Management with =use-package=
-
 My =emacs.d/= depends on use-package.
-
 #+BEGIN_QUOTE
 The use-package macro allows you to isolate package configuration in your .emacs file in a way that is both performance-oriented and, well, tidy.
 #+END_QUOTE
 
-Start using =use-package=
+Start using =use-package=.
 #+BEGIN_SRC emacs-lisp
   (unless (and (package-installed-p 'use-package)
 	       (package-installed-p 'diminish))
@@ -106,9 +102,7 @@ Add custom packages directory to the =load-path=.
 
 * Generic configuration
 ** Housekeeping
-
-Keep filesystem and config files clean
-
+Keep filesystem and config files clean.
 #+BEGIN_SRC emacs-lisp
   ;; Keep emacs Custom-settings in separate file.
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -143,7 +137,7 @@ Keep filesystem and config files clean
 #+END_SRC
 
 ** Many things
-Some essential generic configuration:
+Some essential generic configuration.
 #+BEGIN_SRC emacs-lisp
   ;; Turn off mouse interface early in startup to avoid momentary display.
   (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -174,13 +168,11 @@ Some essential generic configuration:
   ;; set OS we're running on
   (setq is-mac (equal system-type 'darwin))
   (setq is-linux (equal system-type 'gnu-linux))
-
 #+END_SRC
 
-** Mac OS X import shell variables
-Some extra stuff:
+** Mac OS X specials
+*** Import environment variables
 #+BEGIN_SRC emacs-lisp
-  ;; import variables from environment
   (use-package exec-path-from-shell
     :ensure t
     :config
@@ -190,64 +182,49 @@ Some extra stuff:
     (exec-path-from-shell-initialize))
 #+END_SRC
 
-** Mac OS X workarounds
+*** Work around unsupported --dired
 #+BEGIN_SRC emacs-lisp
-  ;; Mac OS X does not support --dired
   (when is-mac
     (setq dired-use-ls-dired nil))
 #+END_SRC
 
 * Keybindings
-
 #+BEGIN_QUOTE
 Just a couple of keybinding changes here, most keybinding should be set in use-package.
 #+END_QUOTE
-
 ** Window focus
-
-I like using shift+arrows to move around:
+Use shift+arrows to move around.
 #+BEGIN_SRC emacs-lisp
-  ;; change key-bindings for changing focus
   (windmove-default-keybindings)
 #+END_SRC
 
 * Appearance
 ** Modeline
-*** Powerline
+*** Powerline package
 #+BEGIN_SRC emacs-lisp
   (use-package powerline
     :ensure t
-    :config
+    :init
     (setq powerline-display-buffer-size nil)
     (setq powerline-display-mule-info nil)
     (setq powerline-display-hud nil)
     (setq powerline-default-separator 'utf-8)
+    :config
     (which-function-mode)
     (powerline-default-theme))
 #+END_SRC
 
-*** Date
-
+*** Powerline contents
 #+BEGIN_SRC emacs-lisp
-  ;; (setq display-time-day-and-date t
-  ;;                 display-time-format "%a %b %d %R"
-  ;;                 display-time-interval 60
-  ;;                 display-time-default-load-average nil)
-  ;; (display-time)
-
-
-  ;;; Minor mode tweaks
   ;; Enable column-number mode
   (column-number-mode t)
 
-  ;; Battery
-  (ignore-errors (display-battery-mode t))
-  (setq battery-mode-line-format "[%p/%L]")
-
   ;; Date/time
-  (display-time-mode t)
-  (setq display-time-24hr-format t)
-  (setq display-time-format "[%d-%m(%b)-%Y-%H:%M]")
+  (setq display-time-day-and-date t
+        display-time-format "%a %b %d %R"
+        display-time-interval 30
+        display-time-default-load-average nil)
+  (display-time)
 
   ;; File size
   (size-indication-mode t)
@@ -257,8 +234,7 @@ I like using shift+arrows to move around:
 #+END_SRC
 
 ** Themes
-
-Plan9 is a fine theme but I'd like
+Use plan9 theme but remove font from org-level-1.
 #+BEGIN_SRC emacs-lisp
   (use-package plan9-theme
     :ensure t
@@ -270,8 +246,7 @@ Plan9 is a fine theme but I'd like
 #+END_SRC
 
 ** Graphic/window elements
-Load proper themes, I seem to like dark in linux, light on mac
-
+Show/hide graphical elements based on OS. Menu bar isn't in the way on Mac OS, show it.
 #+BEGIN_SRC emacs-lisp
   ;; Mac specific config
   (when is-mac
@@ -281,8 +256,7 @@ Load proper themes, I seem to like dark in linux, light on mac
 #+END_SRC
 
 ** Fonts
-
-Just like with themes, I haven't found my font yet.
+Set font for graphical mode.
 #+BEGIN_SRC emacs-lisp
   (when (display-graphic-p
     (when is-mac
@@ -295,23 +269,21 @@ Just like with themes, I haven't found my font yet.
   (use-package org
     :ensure t
     :defer 2
-    :config
+    :init
     (setq org-confirm-babel-evaluate nil))
 #+END_SRC
 
 ** Python
 #+BEGIN_SRC emacs-lisp
-  (use-package python
-    :mode ("\\.py\\'" . python-mode)
-    :interpreter ("python3.6" . python-mode))
+  (use-package python-mode
+    :mode ("\\.py\\'")
+    :interpreter "python3.6")
 #+END_SRC
 
 ** Magit
 [[https://github.com/magit/magit][Magit]] is the ultimate =git= interface for Emacs.
-
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :ensure t
     :bind ("C-x g" . magit-status)
     :diminish magit-auto-revert-mode
     :init
@@ -324,7 +296,11 @@ Just like with themes, I haven't found my font yet.
 ** YAML
 #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :ensure t)
+    :ensure t
+    :defer t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode)))
 #+END_SRC
 
 ** Puppet
@@ -341,11 +317,11 @@ Just like with themes, I haven't found my font yet.
 #+END_SRC
 ** Rust
 Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp`
   (use-package rust-mode
     :ensure t
-    :config
-
+    :defer t
+    :init
     (add-hook 'rust-mode-hook
               (lambda ()
                 (local-set-key (kbd "C-c <tab>") #'rust-format-buffer))))
@@ -391,9 +367,10 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :ensure t
-    :config
+    :init
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
+    :config
     ;; Override default flycheck triggers
     (setq flycheck-emacs-lisp-load-path 'inherit
           flycheck-check-syntax-automatically '(save idle-change mode-enabled)
@@ -418,7 +395,7 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-rust
     :ensure t
-    :config
+    :init
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 #+END_SRC
 ** Alist

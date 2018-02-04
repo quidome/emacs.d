@@ -82,16 +82,18 @@
 
    Start using =use-package=.
    #+BEGIN_SRC emacs-lisp
-  (unless (and (package-installed-p 'use-package)
-	       (package-installed-p 'diminish))
-    (package-refresh-contents))
-  (when (not (package-installed-p 'use-package)) (package-install 'use-package))
-  (when (not (package-installed-p 'diminish)) (package-install 'diminish))
+     (unless (and (package-installed-p 'use-package)
+                  (package-installed-p 'diminish))
+       (package-refresh-contents))
+     (when (not (package-installed-p 'use-package)) (package-install 'use-package))
+     (when (not (package-installed-p 'diminish)) (package-install 'diminish))
 
-  (eval-when-compile
-    (require 'use-package))
-  (require 'diminish)
-  (require 'bind-key)
+     (eval-when-compile
+       (require 'use-package))
+     (require 'diminish)
+     (require 'bind-key)
+
+     (setq use-package-always-ensure t)
    #+END_SRC
 
 ** Custom Packages
@@ -174,11 +176,11 @@
   (use-package exec-path-from-shell
     :if is-mac
     :init
-    (setq exec-path-from-shell-check-startup-files nil)
     :config
-    (exec-path-from-shell-initialize))
+    (setq exec-path-from-shell-check-startup-files nil)
     (push "HISTFILE" exec-path-from-shell-variables)
     (push "GERRIT_SSH_CREDS" exec-path-from-shell-variables)
+    (exec-path-from-shell-initialize))
     #+END_SRC
 
 *** Work around unsupported --dired
@@ -236,12 +238,12 @@
 ** Themes
    Use plan9 theme but remove font from org-level-1.
    #+BEGIN_SRC emacs-lisp
-  (use-package plan9-theme
-    :config
-    (custom-theme-set-faces
-     'plan9
-     `(org-level-1 ((t (:height 1.4 :weight bold :background "#E5E5D0"
-                                  :box (:line-width 1 :style released-button)))))))
+     (use-package plan9-theme
+       :config
+       (custom-theme-set-faces
+        'plan9
+        `(org-level-1 ((t (:height 1.4 :weight bold :background "#E5E5D0"
+                                     :box (:line-width 1 :style released-button)))))))
    #+END_SRC
 
 ** Graphic/window elements
@@ -290,7 +292,6 @@
 ** YAML
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :defer t
     :init
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
     (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode)))
@@ -298,12 +299,11 @@
 
 ** Puppet
    #+BEGIN_SRC emacs-lisp
-     (use-package puppet-mode :defer t)
+     (use-package puppet-mode)
    #+END_SRC
 ** Golang
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode
-       :defer t
        :mode ("\\.go" . go-mode)
        )
    #+END_SRC
@@ -311,7 +311,6 @@
    Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
-       :defer t
        :init
        (add-hook 'rust-mode-hook
                  (lambda ()
@@ -334,40 +333,37 @@
 ** Ivy and friends
 *** Ivy
     #+BEGIN_SRC emacs-lisp
-  (use-package ivy
-    :diminish ivy-mode
-    :config
-    (ivy-mode 1))
+      (use-package ivy
+        :diminish ivy-mode
+        :config
+        (ivy-mode 1))
     #+END_SRC
 
 *** Swiper
     #+BEGIN_SRC emacs-lisp
-      (use-package swiper :defer t)
+      (use-package swiper)
     #+END_SRC
 
 *** Counsel
     #+BEGIN_SRC emacs-lisp
-      (use-package counsel :defer t)
+      (use-package counsel)
     #+END_SRC
 
 ** Markdown
    #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
-    :defer t
     :mode ("\\.md\\'" . markdown-mode))
    #+End_SRC
 ** Magit gerrit
 
    #+BEGIN_SRC emacs-lisp
   (use-package magit-gerrit
-    :after magit
-    :ensure t)
+    :after magit)
    #+END_SRC
 
 ** Flycheck
    #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :defer t
     :init
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
@@ -381,12 +377,11 @@
    #+END_SRC
 *** Flycheck yamllint
     #+BEGIN_SRC emacs-lisp
-      (use-package flycheck-yamllint :defer t)
+      (use-package flycheck-yamllint)
     #+END_SRC
 *** Flycheck bash
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-bashate
-        :defer t
         :after flycheck
         :init
         (flycheck-bashate-setup))
@@ -394,21 +389,19 @@
 *** Flycheck rust
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-rust
-        :defer t
         :init
         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
     #+END_SRC
 ** Alist
 
    #+BEGIN_SRC emacs-lisp
-     (use-package let-alist :defer t)
+     (use-package let-alist)
    #+END_SRC
 
 ** Company
    [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything".
    #+BEGIN_SRC emacs-lisp
      (use-package company
-       :defer t
        :diminish ""
        :config
        (global-company-mode 1)
@@ -419,7 +412,6 @@
 *** Company Jedi
     #+BEGIN_SRC emacs-lisp
       (use-package company-jedi
-        :defer t
         :disabled t
         :config
         (defun psachin/python-mode-hook ()
@@ -429,25 +421,23 @@
     #+END_SRC
 *** Pyenv
     #+BEGIN_SRC emacs-lisp
-      (use-package pyenv-mode :defer t)
+      (use-package pyenv-mode)
     #+END_SRC
 
     #+BEGIN_SRC emacs-lisp
       (use-package pyenv-mode-auto
-        :defer t
         :after pyenv-mode)
     #+END_SRC
 
 *** autopep8
     #+BEGIN_SRC emacs-lisp
-      (use-package py-autopep8 :defer t)
+      (use-package py-autopep8)
     #+END_SRC
 
 *** Elpy
     #+BEGIN_SRC emacs-lisp
       ;; Elpy
       (use-package elpy
-        :defer t
         :diminish elpy-mode
         :init
         (setq
@@ -490,21 +480,19 @@
        (global-set-key [f8] 'neotree-toggle)
        (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
-     (use-package all-the-icons :defer t)
+     (use-package all-the-icons)
    #+END_SRC
 
 ** Rust addons
 *** Cargo
     #+BEGIN_SRC emacs-lisp
       (use-package cargo
-        :defer t
         :config
         (add-hook 'rust-mode-hook 'cargo-minor-mode))
     #+END_SRC
 *** Racer
     #+BEGIN_SRC emacs-lisp
       (use-package racer
-        :defer t
         :config
         (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
         (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
@@ -517,11 +505,11 @@
 ** wgrep
 
    #+BEGIN_SRC emacs-lisp
-     (use-package wgrep :defer t)
+     (use-package wgrep)
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-     (use-package wgrep-ag :defer t)
+     (use-package wgrep-ag)
    #+END_SRC
 
 * Custom functions

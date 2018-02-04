@@ -3,19 +3,23 @@
 #+EMAIL: quidome@gmail.com
 
 * Description
-This file is parsed by [[./init.el][init.el]] which then evaluates all =emacs-lisp= code blocks during startup.
+  This file is parsed by [[./init.el][init.el]] which then evaluates all =emacs-lisp= code blocks during startup.
 
-This configuration is designed for Emacs 24.5 and above.
+  This configuration is designed for Emacs 24.5 and above.
 
 ** Basic Directory
 #+BEGIN_SRC text
   └── .emacs.d
+      ├── auto-backup   # store backup files here
+      ├── auto-save     # store auto save files here
       ├── init.el
-      ├── readme.org  # this file
+      ├── readme.org    # this file
       ├── themes/
-      ├── packages/   # directory for non ELPA / MELPA packages
-      └── backups/    # emacs generated backup files
+      ├── packages/     # directory for non ELPA / MELPA packages
+      └── backups/      # emacs generated backup files
 #+END_SRC
+
+Besides these directories Emacs creates some directories and files on its own.
 
 * Credits
 This =emacs.d/= was heavily inspired by the following configurations.
@@ -28,14 +32,10 @@ This =emacs.d/= was heavily inspired by the following configurations.
 - [[http://endlessparentheses.com/init-org-Without-org-mode.html][Artur Malabarba's init.org Without org-mode]]
 
 * Prerequisites
-
 ** Mac OS X
-
 *** Xcode Command Line Tools
-
 **** OS X 10.13 High Sierra
 Open a Terminal window to install the CLI tools.
-
 #+BEGIN_SRC sh
   xcode-select --install
 #+END_SRC
@@ -66,8 +66,8 @@ The actual configuration starts here, let's start by writing a warning header.
 
 * Package management
 ** Package sources
+Add package sources and initialize.
 #+BEGIN_SRC emacs-lisp
-  ;; get packages working
   (require 'package)
   (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -95,14 +95,19 @@ Start using =use-package=.
 #+END_SRC
 
 ** Custom Packages
-Add custom packages directory to the =load-path=.
+   Add custom packages directory to the =load-path=.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (concat user-emacs-directory "packages/"))
 #+END_SRC
 
 * Generic configuration
 ** Housekeeping
-Keep filesystem and config files clean.
+Keep filesystem and config files clean by storing auto backup and auto save
+files in specified directories instead of anywhere in the filesystem.
+
+And custom config is saved into it's own custom.el file so that config
+changes won't be added to =init.el=.
+
 #+BEGIN_SRC emacs-lisp
   ;; Keep emacs Custom-settings in separate file.
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -127,8 +132,6 @@ Keep filesystem and config files clean.
         `(("." . ,(expand-file-name
                    (concat user-emacs-directory "auto-backup")))))
 
-
-
   ;; Make backups of files, even when they're in version control.
   (setq vc-make-backup-files t)
 
@@ -137,7 +140,7 @@ Keep filesystem and config files clean.
 #+END_SRC
 
 ** Many things
-Some essential generic configuration.
+   Some essential generic configuration.
 #+BEGIN_SRC emacs-lisp
   ;; Turn off mouse interface early in startup to avoid momentary display.
   (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -162,9 +165,6 @@ Some essential generic configuration.
   ;; remove trailing whitespace before we save stuff
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-  ;; fix ediff crash in Emacs GUI
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
   ;; set OS we're running on
   (setq is-mac (equal system-type 'darwin))
   (setq is-linux (equal system-type 'gnu-linux))
@@ -172,14 +172,16 @@ Some essential generic configuration.
 
 ** Mac OS X specials
 *** Import environment variables
+    Emacs running in Mac OS X can't access environment variables by default, this package fixes that.
 #+BEGIN_SRC emacs-lisp
   (use-package exec-path-from-shell
-    :ensure t
+    :if is-mac
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
     :config
+    (exec-path-from-shell-initialize))
     (push "HISTFILE" exec-path-from-shell-variables)
     (push "GERRIT_SSH_CREDS" exec-path-from-shell-variables)
-    (setq exec-path-from-shell-check-startup-files nil)
-    (exec-path-from-shell-initialize))
 #+END_SRC
 
 *** Work around unsupported --dired
@@ -192,6 +194,7 @@ Some essential generic configuration.
 #+BEGIN_QUOTE
 Just a couple of keybinding changes here, most keybinding should be set in use-package.
 #+END_QUOTE
+
 ** Window focus
 Use shift+arrows to move around.
 #+BEGIN_SRC emacs-lisp
@@ -203,7 +206,7 @@ Use shift+arrows to move around.
 *** Powerline package
 #+BEGIN_SRC emacs-lisp
   (use-package powerline
-    :ensure t
+    :disabled t
     :init
     (setq powerline-display-buffer-size nil)
     (setq powerline-display-mule-info nil)
@@ -326,6 +329,20 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
               (lambda ()
                 (local-set-key (kbd "C-c <tab>") #'rust-format-buffer))))
 #+END_SRC
+
+** Ediff
+#+BEGIN_SRC emacs-lisp
+  (use-package ediff
+    :bind (("C-c = b" . ediff-buffers))
+    :init
+    ;; fix ediff crash in Emacs GUI
+    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+    (setq ediff-split-window-function (if (> (frame-width) 150)
+                                            'split-window-horizontally
+                                          'split-window-vertically))
+    )
+#+END_SRC
+
 * Minor modes
 ** Ivy and friends
 *** Ivy

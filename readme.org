@@ -75,7 +75,7 @@
    #+END_SRC
 
 ** Dependency Management with =use-package=
-   My =emacs.d/= depends on use-package.
+   My =emacs.d/= depends on [[https://github.com/jwiegley/use-package][use-package]].
    #+BEGIN_QUOTE
    The use-package macro allows you to isolate package configuration in your .emacs file in a way that is both performance-oriented and, well, tidy.
    #+END_QUOTE
@@ -102,12 +102,9 @@
 
 * Generic configuration
 ** Housekeeping
-   Keep filesystem and config files clean by storing auto backup and auto save
-   files in specified directories instead of anywhere in the filesystem.
+   Keep filesystem and config files clean by storing auto backup and auto save files in specified directories instead of anywhere in the filesystem.
 
-   And custom config is saved into it's own custom.el file so that config
-   changes won't be added to =init.el=.
-
+   And custom config is saved into it's own custom.el file so that config changes won't be added to =init.el=.
    #+BEGIN_SRC emacs-lisp
   ;; Keep emacs Custom-settings in separate file.
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -168,7 +165,7 @@
   ;; set OS we're running on
   (setq is-mac (equal system-type 'darwin))
   (setq is-linux (equal system-type 'gnu-linux))
-#+END_SRC
+   #+END_SRC
 
 ** Mac OS X specials
 *** Import environment variables
@@ -182,13 +179,13 @@
     (exec-path-from-shell-initialize))
     (push "HISTFILE" exec-path-from-shell-variables)
     (push "GERRIT_SSH_CREDS" exec-path-from-shell-variables)
-#+END_SRC
+    #+END_SRC
 
 *** Work around unsupported --dired
     #+BEGIN_SRC emacs-lisp
   (when is-mac
     (setq dired-use-ls-dired nil))
-#+END_SRC
+    #+END_SRC
 
 * Keybindings
   #+BEGIN_QUOTE
@@ -217,7 +214,7 @@
     (powerline-default-theme))
     #+END_SRC
 
-*** Powerline contents
+*** Modeline contents
     #+BEGIN_SRC emacs-lisp
   ;; Enable column-number mode
   (column-number-mode t)
@@ -240,7 +237,6 @@
    Use plan9 theme but remove font from org-level-1.
    #+BEGIN_SRC emacs-lisp
   (use-package plan9-theme
-    :ensure t
     :config
     (custom-theme-set-faces
      'plan9
@@ -251,26 +247,21 @@
 ** Graphic/window elements
    Show/hide graphical elements based on OS. Menu bar isn't in the way on Mac OS, show it.
    #+BEGIN_SRC emacs-lisp
-  ;; Mac specific config
-  (when is-mac
-    ;;
-    (when (display-graphic-p)
-      (menu-bar-mode 1)))
+     (when is-mac (display-graphic-p)
+           (menu-bar-mode 1))
    #+END_SRC
 
 ** Fonts
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
-  (when (display-graphic-p
-    (when is-mac
-    (set-frame-font "Meslo LG M DZ for Powerline 13"))))
+     (when is-mac (display-graphic-p)
+           (set-frame-font "Meslo LG M DZ for Powerline 13"))
    #+END_SRC
 
 * Major modes
 ** Org mode
    #+BEGIN_SRC emacs-lisp
   (use-package org
-    :ensure t
     :defer 2
     :init
     (setq org-confirm-babel-evaluate nil))
@@ -299,7 +290,6 @@
 ** YAML
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :ensure t
     :defer t
     :init
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -308,39 +298,36 @@
 
 ** Puppet
    #+BEGIN_SRC emacs-lisp
-  (use-package puppet-mode
-    :ensure t)
+     (use-package puppet-mode :defer t)
    #+END_SRC
 ** Golang
    #+BEGIN_SRC emacs-lisp
-  (use-package go-mode
-    :ensure t
-    :mode ("\\.go" . go-mode)
-    )
+     (use-package go-mode
+       :defer t
+       :mode ("\\.go" . go-mode)
+       )
    #+END_SRC
 ** Rust
    Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
-   #+BEGIN_SRC emacs-lisp`
-  (use-package rust-mode
-    :ensure t
-    :defer t
-    :init
-    (add-hook 'rust-mode-hook
-              (lambda ()
-                (local-set-key (kbd "C-c <tab>") #'rust-format-buffer))))
+   #+BEGIN_SRC emacs-lisp
+     (use-package rust-mode
+       :defer t
+       :init
+       (add-hook 'rust-mode-hook
+                 (lambda ()
+                   (local-set-key (kbd "C-c <tab>") #'rust-format-buffer))))
    #+END_SRC
 
 ** Ediff
    #+BEGIN_SRC emacs-lisp
-  (use-package ediff
-    :bind (("C-c = b" . ediff-buffers))
-    :init
-    ;; fix ediff crash in Emacs GUI
-    (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-    (setq ediff-split-window-function (if (> (frame-width) 150)
-                                            'split-window-horizontally
-                                          'split-window-vertically))
-    )
+     (use-package ediff
+       :bind (("C-c = b" . ediff-buffers))
+       :init
+       ;; fix ediff crash in Emacs GUI
+       (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+       (setq ediff-split-window-function (if (> (frame-width) 150)
+                                             'split-window-horizontally
+                                           'split-window-vertically)))
    #+END_SRC
 
 * Minor modes
@@ -348,7 +335,6 @@
 *** Ivy
     #+BEGIN_SRC emacs-lisp
   (use-package ivy
-    :ensure t
     :diminish ivy-mode
     :config
     (ivy-mode 1))
@@ -356,20 +342,18 @@
 
 *** Swiper
     #+BEGIN_SRC emacs-lisp
-    (use-package swiper
-      :ensure t)
+      (use-package swiper :defer t)
     #+END_SRC
 
 *** Counsel
     #+BEGIN_SRC emacs-lisp
-    (use-package counsel
-      :ensure t)
+      (use-package counsel :defer t)
     #+END_SRC
 
 ** Markdown
    #+BEGIN_SRC emacs-lisp
   (use-package markdown-mode
-    :ensure t
+    :defer t
     :mode ("\\.md\\'" . markdown-mode))
    #+End_SRC
 ** Magit gerrit
@@ -383,7 +367,7 @@
 ** Flycheck
    #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :ensure t
+    :defer t
     :init
     (add-hook 'after-init-hook 'global-flycheck-mode)
 
@@ -397,157 +381,147 @@
    #+END_SRC
 *** Flycheck yamllint
     #+BEGIN_SRC emacs-lisp
-  (use-package flycheck-yamllint
-    :ensure t)
+      (use-package flycheck-yamllint :defer t)
     #+END_SRC
 *** Flycheck bash
     #+BEGIN_SRC emacs-lisp
-  (use-package flycheck-bashate
-    :ensure t
-    :after flycheck
-    :init
-    (flycheck-bashate-setup))
+      (use-package flycheck-bashate
+        :defer t
+        :after flycheck
+        :init
+        (flycheck-bashate-setup))
     #+END_SRC
 *** Flycheck rust
     #+BEGIN_SRC emacs-lisp
-  (use-package flycheck-rust
-    :ensure t
-    :init
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+      (use-package flycheck-rust
+        :defer t
+        :init
+        (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
     #+END_SRC
 ** Alist
 
    #+BEGIN_SRC emacs-lisp
-  (use-package let-alist
-    :ensure t)
+     (use-package let-alist :defer t)
    #+END_SRC
 
 ** Company
    [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything".
    #+BEGIN_SRC emacs-lisp
-    (use-package company
-      :ensure t
-      :diminish ""
-      :config
-      (global-company-mode 1)
-      :bind ("C-c c" . company-complete)
-  )
+     (use-package company
+       :defer t
+       :diminish ""
+       :config
+       (global-company-mode 1)
+       :bind ("C-c c" . company-complete))
    #+END_SRC
 
 ** Python
 *** Company Jedi
     #+BEGIN_SRC emacs-lisp
-  (use-package company-jedi
-    :ensure t
-    :disabled t
-    :config
-    (defun psachin/python-mode-hook ()
-      (add-to-list 'company-backends 'company-jedi))
+      (use-package company-jedi
+        :defer t
+        :disabled t
+        :config
+        (defun psachin/python-mode-hook ()
+          (add-to-list 'company-backends 'company-jedi))
 
-    (add-hook 'python-mode-hook 'psachin/python-mode-hook))
+        (add-hook 'python-mode-hook 'psachin/python-mode-hook))
     #+END_SRC
 *** Pyenv
+    #+BEGIN_SRC emacs-lisp
+      (use-package pyenv-mode :defer t)
+    #+END_SRC
 
     #+BEGIN_SRC emacs-lisp
-  ;; use pyenv-mode
-  (use-package pyenv-mode
-    :ensure t)
-
-  ;; use pyenv-mode-auto
-  (use-package pyenv-mode-auto
-    :ensure t
-    :after pyenv-mode)
+      (use-package pyenv-mode-auto
+        :defer t
+        :after pyenv-mode)
     #+END_SRC
 
 *** autopep8
     #+BEGIN_SRC emacs-lisp
-  (use-package py-autopep8
-    :ensure t)
+      (use-package py-autopep8 :defer t)
     #+END_SRC
 
 *** Elpy
     #+BEGIN_SRC emacs-lisp
-  ;; Elpy
-  (use-package elpy
-    :ensure t
-    :diminish elpy-mode
-    :init
-    (setq
-     ;; Referred from:
-     ;; https://github.com/ajschumacher/.emacs.d/blob/master/init.el
-     ;; sudo dnf install python-jedi python3-jedi -y
-     elpy-rpc-backend "jedi"
-     help-at-pt-timer-delay 0.9
-     help-at-pt-display-when-idle t
-     tab-width 4)
+      ;; Elpy
+      (use-package elpy
+        :defer t
+        :diminish elpy-mode
+        :init
+        (setq
+         ;; Referred from:
+         ;; https://github.com/ajschumacher/.emacs.d/blob/master/init.el
+         ;; sudo dnf install python-jedi python3-jedi -y
+         elpy-rpc-backend "jedi"
+         help-at-pt-timer-delay 0.9
+         help-at-pt-display-when-idle t
+         tab-width 4)
 
-    :config
-    (elpy-enable)
-    ;; Don't use flymake if flycheck is available
-    (when (require 'flycheck nil t)
-      (setq elpy-module
-            (delq 'elpy-module-flymake elpy-modules)))
+        :config
+        (elpy-enable)
+        ;; Don't use flymake if flycheck is available
+        (when (require 'flycheck nil t)
+          (setq elpy-module
+                (delq 'elpy-module-flymake elpy-modules)))
 
-    ;; Enable flycheck and pep8
-    (add-hook 'elpy-mode-hook 'flycheck-mode)
+        ;; Enable flycheck and pep8
+        (add-hook 'elpy-mode-hook 'flycheck-mode)
 
-    ;; Following gives problem when python code used in reveal.js
-    ;; presentation.
-    ;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+        ;; Following gives problem when python code used in reveal.js
+        ;; presentation.
+        ;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 
-    ;; Do not highlight indentation
-    (delete 'elpy-module-highlight-indentation elpy-modules)
+        ;; Do not highlight indentation
+        (delete 'elpy-module-highlight-indentation elpy-modules)
 
-    ;; I use this keys for window (re)size
-    (eval-after-load "elpy"
-      '(cl-dolist (key '("C-<up>" "C-<down>" "C-<left>" "C-<right>"))
-         (define-key elpy-mode-map (kbd key) nil))))
+        ;; I use this keys for window (re)size
+        (eval-after-load "elpy"
+          '(cl-dolist (key '("C-<up>" "C-<down>" "C-<left>" "C-<right>"))
+             (define-key elpy-mode-map (kbd key) nil))))
     #+END_SRC
 
 ** Neotree
    Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
    #+BEGIN_SRC emacs-lisp
-  (use-package neotree
-    :ensure t
-    :config
-    (global-set-key [f8] 'neotree-toggle)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+     (use-package neotree
+       :config
+       (global-set-key [f8] 'neotree-toggle)
+       (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
-  (use-package all-the-icons
-    :ensure t)
+     (use-package all-the-icons :defer t)
    #+END_SRC
 
 ** Rust addons
 *** Cargo
     #+BEGIN_SRC emacs-lisp
-  (use-package cargo
-    :ensure t
-    :config
-    (add-hook 'rust-mode-hook 'cargo-minor-mode)
-    )
+      (use-package cargo
+        :defer t
+        :config
+        (add-hook 'rust-mode-hook 'cargo-minor-mode))
     #+END_SRC
 *** Racer
     #+BEGIN_SRC emacs-lisp
-  (use-package racer
-    :ensure t
-    :config
-    (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
-    (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
+      (use-package racer
+        :defer t
+        :config
+        (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
+        (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
 
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode)
-    (add-hook 'racer-mode-hook #'company-mode))
+        (add-hook 'rust-mode-hook #'racer-mode)
+        (add-hook 'racer-mode-hook #'eldoc-mode)
+        (add-hook 'racer-mode-hook #'company-mode))
     #+END_SRC
 * Other packages
 ** wgrep
+
    #+BEGIN_SRC emacs-lisp
-  (use-package wgrep
-    :ensure t)
+     (use-package wgrep :defer t)
    #+END_SRC
 
    #+BEGIN_SRC emacs-lisp
-  (use-package wgrep-ag
-    :ensure t)
+     (use-package wgrep-ag :defer t)
    #+END_SRC
 
 * Custom functions
@@ -555,11 +529,11 @@
 *** Buffer
     My first function to have list-buffers (buffer menu)
     #+BEGIN_SRC emacs-lisp
-  (defun buffer-list-moveto ()
-    "Open buffer list and jump to that window."
-    (interactive)
-    (list-buffers)
-    (other-window 1 nil)
-    )
-  (global-set-key (kbd "C-x C-b") 'buffer-list-moveto)
+      (defun buffer-list-moveto ()
+        "Open buffer list and jump to that window."
+        (interactive)
+        (list-buffers)
+        (other-window 1 nil)
+        )
+      (global-set-key (kbd "C-x C-b") 'buffer-list-moveto)
     #+END_SRC

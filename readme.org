@@ -239,12 +239,18 @@
    Use plan9 theme but remove font from org-level-1.
    #+BEGIN_SRC emacs-lisp
      (use-package plan9-theme
+       :if nil
        :config
        (custom-theme-set-faces
         'plan9
         `(org-level-1 ((t (:height 1.4 :weight bold :background "#E5E5D0"
                                      :box (:line-width 1 :style released-button)))))))
    #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package monokai-theme
+    :if 1)
+#+END_SRC
 
 ** Graphic/window elements
    Show/hide graphical elements based on OS. Menu bar isn't in the way on Mac OS, show it.

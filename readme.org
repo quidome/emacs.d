@@ -252,18 +252,10 @@
     :if 1)
 #+END_SRC
 
-** Graphic/window elements
-   Show/hide graphical elements based on OS. Menu bar isn't in the way on Mac OS, show it.
-   #+BEGIN_SRC emacs-lisp
-     (when is-mac (display-graphic-p)
-           (menu-bar-mode 1))
-   #+END_SRC
-
 ** Fonts
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
-     (when is-mac (display-graphic-p)
-           (set-frame-font "Meslo LG M DZ for Powerline 13"))
+     (set-frame-font "Meslo LG M DZ for Powerline 13")
    #+END_SRC
 
 * Major modes
@@ -307,12 +299,14 @@
    #+BEGIN_SRC emacs-lisp
      (use-package puppet-mode)
    #+END_SRC
+
 ** Golang
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode
        :mode ("\\.go" . go-mode)
        )
    #+END_SRC
+
 ** Rust
    Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
    #+BEGIN_SRC emacs-lisp

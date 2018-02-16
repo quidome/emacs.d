@@ -205,7 +205,6 @@
 *** Powerline package
     #+BEGIN_SRC emacs-lisp
   (use-package powerline
-    :disabled t
     :init
     (setq powerline-display-buffer-size nil)
     (setq powerline-display-mule-info nil)
@@ -255,7 +254,7 @@
 ** Fonts
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Meslo LG M DZ for Powerline 13")
+     (set-frame-font "Inconsolata for Powerline 16")
    #+END_SRC
 
 * Major modes
@@ -273,6 +272,11 @@
     :mode ("\\.py\\'")
     :interpreter "python3.6")
    #+END_SRC
+
+** Ruby
+#+BEGIN_SRC emacs-lisp
+  (use-package ruby-mode)
+#+END_SRC
 
 ** Magit
    [[https://github.com/magit/magit][Magit]] is the ultimate =git= interface for Emacs.
@@ -407,6 +411,20 @@
        (global-company-mode 1)
        :bind ("C-c c" . company-complete))
    #+END_SRC
+** Ruby
+*** Robe
+#+BEGIN_SRC emacs-lisp
+  (use-package robe
+    :defer t
+    :ensure t
+    :disabled t
+    :after ruby-mode
+    :init
+    (progn
+      (add-hook 'ruby-mode-hook 'robe-mode)
+      (with-eval-after-load 'company
+  (add-to-list 'company-backends 'company-robe))))
+#+END_SRC
 
 ** Python
 *** Company Jedi

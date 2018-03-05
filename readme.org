@@ -334,6 +334,16 @@
    #+END_SRC
 
 * Minor modes
+
+** Company
+   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything".
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :diminish ""
+       :config
+       (global-company-mode 1)
+       :bind ("C-c c" . company-complete))
+   #+END_SRC
 ** Ivy and friends
 *** Ivy
     #+BEGIN_SRC emacs-lisp
@@ -396,20 +406,26 @@
         :init
         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
     #+END_SRC
+** ansible
+*** ansible itself
+#+BEGIN_SRC emacs-lisp
+  (use-package ansible)
+#+END_SRC
+
+*** company-ansible
+Use company for code completion.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-ansible)
+#+END_SRC
+** jinja2
+#+BEGIN_SRC emacs-lisp
+  (use-package jinja2-mode
+    :mode "\\.j2\\'")
+#+END_SRC
 ** Alist
 
    #+BEGIN_SRC emacs-lisp
      (use-package let-alist)
-   #+END_SRC
-
-** Company
-   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything".
-   #+BEGIN_SRC emacs-lisp
-     (use-package company
-       :diminish ""
-       :config
-       (global-company-mode 1)
-       :bind ("C-c c" . company-complete))
    #+END_SRC
 ** Ruby
 *** Robe

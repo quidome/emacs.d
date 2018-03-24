@@ -536,15 +536,33 @@ Use company for code completion.
         (add-hook 'racer-mode-hook #'company-mode))
     #+END_SRC
 * Other packages
+** ripgrep
+#+BEGIN_SRC emacs-lisp
+  (use-package rg
+    :if (executable-find "rg")
+    :commands (rg)
+    ;;
+    :config
+    ;; List of command line flags for rg.
+    (setq rg-command-line-flags '())
+    ;; Group matches in the same file together.
+    (setq rg-group-result t)
+    ;; wgrep compatibility (requires wgrep-ag.el)
+  )
+#+END_SRC
+
 ** wgrep
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package wgrep)
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package wgrep-ag)
-   #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (use-package wgrep
+    :commands (wgrep-setup)
+    :init
+    (add-hook 'grep-setup-hook 'wgrep-setup)
+    :config
+    ;; r/C-x C-q/C-c C-i to enter edit mode. C-x C-s to save, C-c C-k
+    (define-key grep-mode-map (kbd "r") 'wgrep-change-to-wgrep-mode)
+    (define-key grep-mode-map (kbd "C-x C-q") 'wgrep-change-to-wgrep-mode)
+    (define-key grep-mode-map (kbd "C-c C-i") 'wgrep-change-to-wgrep-mode))
+#+END_SRC
 
 * Custom functions
 ** Emacs lisp

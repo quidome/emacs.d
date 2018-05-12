@@ -247,14 +247,14 @@
    #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (use-package monokai-theme
+  (use-package material-theme
     :if 1)
 #+END_SRC
 
 ** Fonts
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Inconsolata for Powerline 16")
+     (set-frame-font "Inconsolata 14")
    #+END_SRC
 
 * Major modes

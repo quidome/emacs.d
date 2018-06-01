@@ -259,7 +259,6 @@
 
      (when is-linux
        (set-frame-font "Source Code Pro Medium 10"))
-   #+END_SRC
 
 * Major modes
 ** Org mode

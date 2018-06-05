@@ -254,7 +254,11 @@
 ** Fonts
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
-     (set-frame-font "Inconsolata 14")
+     (when is-mac
+       (set-frame-font "Inconsolata for Powerline 16"))
+
+     (when is-linux
+       (set-frame-font "Inconsolata 12"))
    #+END_SRC
 
 * Major modes

@@ -258,7 +258,7 @@
        (set-frame-font "Inconsolata for Powerline 16"))
 
      (when is-linux
-       (set-frame-font "Inconsolata 12"))
+       (set-frame-font "Source Code Pro Medium 10"))
    #+END_SRC
 
 * Major modes

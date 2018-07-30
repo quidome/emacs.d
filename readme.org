@@ -103,6 +103,13 @@
    #+END_SRC
 
 * Generic configuration
+** Personal choices
+#+BEGIN_SRC emacs-lisp
+  ;; Choose whether to theme light or dark
+  (setq light-theme nil)
+  (setq dark-theme 1)
+#+END_SRC
+
 ** Housekeeping
    Keep filesystem and config files clean by storing auto backup and auto save files in specified directories instead of anywhere in the filesystem.
 
@@ -166,7 +173,7 @@
 
   ;; set OS we're running on
   (setq is-mac (equal system-type 'darwin))
-  (setq is-linux (equal system-type 'gnu-linux))
+  (setq is-linux (equal system-type 'gnu/linux))
    #+END_SRC
 
 ** Mac OS X specials
@@ -235,20 +242,17 @@
     #+END_SRC
 
 ** Themes
-   Use plan9 theme but remove font from org-level-1.
-   #+BEGIN_SRC emacs-lisp
-     (use-package plan9-theme
-       :if nil
-       :config
-       (custom-theme-set-faces
-        'plan9
-        `(org-level-1 ((t (:height 1.4 :weight bold :background "#E5E5D0"
-                                     :box (:line-width 1 :style released-button)))))))
-   #+END_SRC
-
+Use theme based on settings of light-theme and dark-theme
 #+BEGIN_SRC emacs-lisp
+  (use-package spacemacs-theme
+    :if light-theme
+    :defer t
+    :init (load-theme 'spacemacs-light t))
+
   (use-package material-theme
-    :if 1)
+    :if dark-theme
+    :defer t
+    :init (load-theme 'material t))
 #+END_SRC
 
 ** Fonts
@@ -259,6 +263,7 @@
 
      (when is-linux
        (set-frame-font "Source Code Pro Medium 10"))
+   #+END_SRC
 
 * Major modes
 ** Org mode
@@ -445,6 +450,72 @@ Use company for code completion.
   (add-to-list 'company-backends 'company-robe))))
 #+END_SRC
 
+*** enhanced ruby mode
+#+BEGIN_SRC emacs-lisp
+  (use-package enh-ruby-mode
+    :ensure t
+    :defer t
+    :mode (("\\.rb\\'"       . enh-ruby-mode)
+	   ("\\.ru\\'"       . enh-ruby-mode)
+	   ("\\.jbuilder\\'" . enh-ruby-mode)
+	   ("\\.gemspec\\'"  . enh-ruby-mode)
+	   ("\\.rake\\'"     . enh-ruby-mode)
+	   ("Rakefile\\'"    . enh-ruby-mode)
+	   ("Gemfile\\'"     . enh-ruby-mode)
+	   ("Guardfile\\'"   . enh-ruby-mode)
+	   ("Capfile\\'"     . enh-ruby-mode)
+	   ("Vagrantfile\\'" . enh-ruby-mode))
+    :config (progn
+	      (setq enh-ruby-indent-level 2
+		    enh-ruby-add-encoding-comment-on-save nil
+		    enh-ruby-deep-indent-paren nil
+		    enh-ruby-bounce-deep-indent t
+		    enh-ruby-hanging-indent-level 2)
+	      (setq enh-ruby-program "/Users/senny/.rbenv/versions/2.4.0/bin/ruby")
+	      (setq ruby-insert-encoding-magic-comment nil)))
+#+END_SRC
+
+*** rbenv
+#+BEGIN_SRC emacs-lisp
+  (use-package rbenv
+    :ensure t
+    :defer t
+    :init (setq rbenv-show-active-ruby-in-modeline nil)
+    :config (progn
+              (global-rbenv-mode)
+              (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)))
+#+END_SRC
+
+** Neotree
+   Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
+   #+BEGIN_SRC emacs-lisp
+     (use-package neotree
+       :config
+       (global-set-key [f8] 'neotree-toggle)
+       (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+
+     (use-package all-the-icons)
+   #+END_SRC
+
+** Rust addons
+*** Cargo
+    #+BEGIN_SRC emacs-lisp
+      (use-package cargo
+        :config
+        (add-hook 'rust-mode-hook 'cargo-minor-mode))
+    #+END_SRC
+*** Racer
+    #+BEGIN_SRC emacs-lisp
+      (use-package racer
+        :config
+        (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
+        (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
+
+        (add-hook 'rust-mode-hook #'racer-mode)
+        (add-hook 'racer-mode-hook #'eldoc-mode)
+        (add-hook 'racer-mode-hook #'company-mode))
+    #+END_SRC
+
 ** Python
 *** Company Jedi
     #+BEGIN_SRC emacs-lisp
@@ -469,7 +540,7 @@ Use company for code completion.
 *** autopep8
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8)
-    #+END_SRC
+    b+END_SRC
 
 *** Elpy
     #+BEGIN_SRC emacs-lisp
@@ -508,36 +579,6 @@ Use company for code completion.
           '(cl-dolist (key '("C-<up>" "C-<down>" "C-<left>" "C-<right>"))
              (define-key elpy-mode-map (kbd key) nil))))
     #+END_SRC
-
-** Neotree
-   Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
-   #+BEGIN_SRC emacs-lisp
-     (use-package neotree
-       :config
-       (global-set-key [f8] 'neotree-toggle)
-       (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
-     (use-package all-the-icons)
-   #+END_SRC
-
-** Rust addons
-*** Cargo
-    #+BEGIN_SRC emacs-lisp
-      (use-package cargo
-        :config
-        (add-hook 'rust-mode-hook 'cargo-minor-mode))
-    #+END_SRC
-*** Racer
-    #+BEGIN_SRC emacs-lisp
-      (use-package racer
-        :config
-        (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
-        (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
-
-        (add-hook 'rust-mode-hook #'racer-mode)
-        (add-hook 'racer-mode-hook #'eldoc-mode)
-        (add-hook 'racer-mode-hook #'company-mode))
-    #+END_SRC
 * Other packages
 ** ripgrep
 #+BEGIN_SRC emacs-lisp
@@ -571,12 +612,12 @@ Use company for code completion.
 ** Emacs lisp
 *** Buffer
     My first function to have list-buffers (buffer menu)
-    #+BEGIN_SRC emacs-lisp
-      (defun buffer-list-moveto ()
-        "Open buffer list and jump to that window."
-        (interactive)
-        (list-buffers)
-        (other-window 1 nil)
-        )
-      (global-set-key (kbd "C-x C-b") 'buffer-list-moveto)
-    #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun buffer-list-moveto ()
+    "Open buffer list and jump to that window."
+    (interactive)
+    (list-buffers)
+    (other-window 1 nil)
+    )
+  (global-set-key (kbd "C-x C-b") 'buffer-list-moveto)
+#+END_SRC

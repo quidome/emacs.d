@@ -312,6 +312,11 @@ Use theme based on settings of light-theme and dark-theme
      (use-package puppet-mode)
    #+END_SRC
 
+** Rspec
+#+BEGIN_SRC emacs-lisp
+  (use-package rspec-mode)
+#+END_SRC
+
 ** Golang
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode
@@ -363,7 +368,10 @@ Use theme based on settings of light-theme and dark-theme
 
 *** Swiper
     #+BEGIN_SRC emacs-lisp
-      (use-package swiper)
+      (use-package swiper
+	:bind (("C-s" . swiper)
+	       ("C-r" . swiper))		; global binds
+      )
     #+END_SRC
 
 *** Counsel

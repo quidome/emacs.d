@@ -278,7 +278,7 @@ Use theme based on settings of light-theme and dark-theme
    #+BEGIN_SRC emacs-lisp
   (use-package python-mode
     :mode ("\\.py\\'")
-    :interpreter "python3.6")
+    :interpreter "python3")
    #+END_SRC
 
 ** Ruby
@@ -386,7 +386,7 @@ Use theme based on settings of light-theme and dark-theme
    #+End_SRC
 ** Magit gerrit
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp-dontrun
   (use-package magit-gerrit
     :after magit)
    #+END_SRC
@@ -488,11 +488,15 @@ Use company for code completion.
   (use-package rbenv
     :ensure t
     :defer t
-    :init (setq rbenv-show-active-ruby-in-modeline nil)
+    :init
+    ;; (setq rbenv-installation-dir "/usr")
+    (setq rbenv-show-active-ruby-in-modeline nil)
     :config (progn
-              (global-rbenv-mode)
-              (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)))
+	      (global-rbenv-mode)
+	      (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)))
 #+END_SRC
+
+#+RESULTS:
 
 ** Neotree
    Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
@@ -548,7 +552,7 @@ Use company for code completion.
 *** autopep8
     #+BEGIN_SRC emacs-lisp
       (use-package py-autopep8)
-    b+END_SRC
+    #+END_SRC
 
 *** Elpy
     #+BEGIN_SRC emacs-lisp

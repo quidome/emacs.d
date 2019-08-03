@@ -83,7 +83,7 @@
    Start using =use-package=.
    #+BEGIN_SRC emacs-lisp
      (unless (and (package-installed-p 'use-package)
-                  (package-installed-p 'diminish))
+		  (package-installed-p 'diminish))
        (package-refresh-contents))
      (when (not (package-installed-p 'use-package)) (package-install 'use-package))
      (when (not (package-installed-p 'diminish)) (package-install 'diminish))
@@ -93,6 +93,7 @@
      (require 'diminish)
      (require 'bind-key)
 
+     ;; ensure by default
      (setq use-package-always-ensure t)
    #+END_SRC
 
@@ -115,34 +116,33 @@
 
    And custom config is saved into it's own custom.el file so that config changes won't be added to =init.el=.
    #+BEGIN_SRC emacs-lisp
-  ;; Keep emacs Custom-settings in separate file.
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file 'noerror)
+     ;; Keep emacs Custom-settings in separate file.
+     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+     (load custom-file 'noerror)
 
-  ;; Save point position between sessions.
-  (use-package saveplace)
-  (setq-default save-place t)
-  (setq save-place-file (expand-file-name "places" user-emacs-directory))
+     ;; Save point position between sessions.
+     (use-package saveplace)
+     (setq-default save-place t)
+     (setq save-place-file (expand-file-name "places" user-emacs-directory))
 
+     ;; create auto-backup and auto-save location
+     (make-directory "~/.emacs.d/auto-save/" t)
+     (make-directory "~/.emacs.d/auto-backup/" t)
 
-  ;; create auto-backup and auto-save location
-  (make-directory "~/.emacs.d/auto-save/" t)
-  (make-directory "~/.emacs.d/auto-backup/" t)
+     ;; put auto saves into user-emacs-directory/auto-save
+     (setq auto-save-file-name-transforms
+	   `((".*" ,(concat user-emacs-directory "auto-save/") t)))
 
-  ;; put auto saves into user-emacs-directory/auto-save
-  (setq auto-save-file-name-transforms
-        `((".*" ,(concat user-emacs-directory "auto-save/") t)))
+     ;; Write backup files to own directory
+     (setq backup-directory-alist
+	   `(("." . ,(expand-file-name
+		      (concat user-emacs-directory "auto-backup")))))
 
-  ;; Write backup files to own directory
-  (setq backup-directory-alist
-        `(("." . ,(expand-file-name
-                   (concat user-emacs-directory "auto-backup")))))
+     ;; Make backups of files, even when they're in version control.
+     (setq vc-make-backup-files t)
 
-  ;; Make backups of files, even when they're in version control.
-  (setq vc-make-backup-files t)
-
-  ;; Disable stupid lockfiles (.#file-name)
-  (setq create-lockfiles nil)
+     ;; Disable stupid lockfiles (.#file-name)
+     (setq create-lockfiles nil)
    #+END_SRC
 
 ** Many things
@@ -321,8 +321,16 @@ Use theme based on settings of light-theme and dark-theme
    #+BEGIN_SRC emacs-lisp
      (use-package go-mode
        :mode ("\\.go" . go-mode)
-       )
+       :init
+       (progn
+	 (setq gofmt-command "goimports")
+	 (add-hook 'before-save-hook 'gofmt-before-save)))
    #+END_SRC
+
+*** go projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package go-projectile)
+#+END_SRC
 
 ** Rust
    Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
@@ -386,10 +394,13 @@ Use theme based on settings of light-theme and dark-theme
    #+End_SRC
 ** Magit gerrit
 
-   #+BEGIN_SRC emacs-lisp-dontrun
-  (use-package magit-gerrit
-    :after magit)
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit-gerrit
+       :after (magit magit))
+       :config (use-package magit-popup)
    #+END_SRC
+
+   #+RESULTS:
 
 ** Flycheck
    #+BEGIN_SRC emacs-lisp
@@ -448,7 +459,6 @@ Use company for code completion.
 #+BEGIN_SRC emacs-lisp
   (use-package robe
     :defer t
-    :ensure t
     :disabled t
     :after ruby-mode
     :init
@@ -461,7 +471,6 @@ Use company for code completion.
 *** enhanced ruby mode
 #+BEGIN_SRC emacs-lisp
   (use-package enh-ruby-mode
-    :ensure t
     :defer t
     :mode (("\\.rb\\'"       . enh-ruby-mode)
 	   ("\\.ru\\'"       . enh-ruby-mode)
@@ -486,7 +495,6 @@ Use company for code completion.
 *** rbenv
 #+BEGIN_SRC emacs-lisp
   (use-package rbenv
-    :ensure t
     :defer t
     :init
     ;; (setq rbenv-installation-dir "/usr")
@@ -503,10 +511,11 @@ Use company for code completion.
    #+BEGIN_SRC emacs-lisp
      (use-package neotree
        :config
+       (use-package all-the-icons)
+       (global-set-key [s-XF86TouchpadToggle] 'neotree-toggle)
        (global-set-key [f8] 'neotree-toggle)
        (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
-     (use-package all-the-icons)
    #+END_SRC
 
 ** Rust addons

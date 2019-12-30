@@ -274,6 +274,17 @@ Use theme based on settings of light-theme and dark-theme
     (setq org-confirm-babel-evaluate nil))
    #+END_SRC
 
+** Project
+ile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (projectile-mode +1))
+#+END_SRC
+
 ** Python
    #+BEGIN_SRC emacs-lisp
   (use-package python-mode
@@ -319,12 +330,20 @@ Use theme based on settings of light-theme and dark-theme
 
 ** Golang
    #+BEGIN_SRC emacs-lisp
+     (defun custom-go-mode ()
+       (display-line-numbers-mode 1))
+
+
      (use-package go-mode
-       :mode ("\\.go" . go-mode)
+       :defer t
+       :ensure t
+       :mode ("\\.go\\'" . go-mode)
        :init
-       (progn
-	 (setq gofmt-command "goimports")
-	 (add-hook 'before-save-hook 'gofmt-before-save)))
+       (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
+       (setq compilation-read-command nil)
+       (add-hook 'go-mode-hook 'custom-go-mode)
+       :bind (("M-," . compile)
+	      ("M-." . godef-jump)))
    #+END_SRC
 
 *** go projectile
@@ -356,15 +375,72 @@ Use theme based on settings of light-theme and dark-theme
 
 * Minor modes
 
+** LSP
+
+The Language Server protocol is used between a tool (the client) and a language smartness provider (the server) to integrate features like auto complete, go to definition, find all references and alike into the tool.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :commands (lsp lsp-deferred)
+    :hook (go-mode . lsp-deferred))
+
+  ;;Set up before-save hooks to format buffer and add/delete imports.
+  ;;Make sure you don't have other gofmt/goimports hooks enabled.
+
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+  ;;Optional - provides fancier overlays.
+
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :init
+  )
+
+
+  (setq lsp-ui-doc-enable nil
+	lsp-ui-peek-enable t
+	lsp-ui-sideline-enable t
+	lsp-ui-imenu-enable t
+	lsp-ui-flycheck-enable t)
+#+END_SRC
+
 ** Company
-   [[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything".
+
+[[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything" and works well with lsp-mode.
+company-lsp integrates company mode completion with lsp-mode.
+completion-at-point also works out of the box but doesn't support snippets.
+
    #+BEGIN_SRC emacs-lisp
      (use-package company
+       :ensure t
        :diminish ""
        :config
        (global-company-mode 1)
-       :bind ("C-c c" . company-complete))
+       (setq company-idle-delay 0)
+       (setq company-minimum-prefix-length 1))
+;       :bind ("C-c c" . company-complete))
+
+     (use-package company-lsp
+       :ensure t
+       :commands company-lsp)
    #+END_SRC
+
+** Snippets
+
+Provides snippet support
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package yasnippet
+	:ensure t
+	:commands yas-minor-mode
+	:hook (go-mode . yas-minor-mode))
+    #+END_SRC
+
 ** Ivy and friends
 *** Ivy
     #+BEGIN_SRC emacs-lisp
@@ -381,6 +457,7 @@ Use theme based on settings of light-theme and dark-theme
 	       ("C-r" . swiper))		; global binds
       )
     #+END_SRC
+
 
 *** Counsel
     #+BEGIN_SRC emacs-lisp

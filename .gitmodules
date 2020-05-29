@@ -1,0 +1,3 @@
+[submodule "magit-gerrit"]
+  path = packages/magit-gerrit
+  url = https://github.com/ispras/magit-gerrit.git

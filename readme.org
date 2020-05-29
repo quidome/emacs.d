@@ -101,6 +101,8 @@
    Add custom packages directory to the =load-path=.
    #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (concat user-emacs-directory "packages/"))
+  (add-to-list 'load-path (concat user-emacs-directory "packages/magit-gerrit"))
+
    #+END_SRC
 
 * Generic configuration
@@ -352,7 +354,7 @@ ile
 #+END_SRC
 
 ** Rust
-   Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
+Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]
    #+BEGIN_SRC emacs-lisp
      (use-package rust-mode
        :init
@@ -373,8 +375,14 @@ ile
                                            'split-window-vertically)))
    #+END_SRC
 
-* Minor modes
+** vterm
+#+BEGIN_SRC emacs-lisp
+(use-package vterm
+    :ensure t
+)
+#+END_SRC
 
+* Minor modes
 ** LSP
 
 The Language Server protocol is used between a tool (the client) and a language smartness provider (the server) to integrate features like auto complete, go to definition, find all references and alike into the tool.
@@ -471,11 +479,24 @@ Provides snippet support
    #+End_SRC
 ** Magit gerrit
 
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp-nonono
      (use-package magit-gerrit
        :after (magit magit))
        :config (use-package magit-popup)
    #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(require 'magit-gerrit)
+
+;; if remote url is not using the default gerrit port and
+;; ssh scheme, need to manually set this variable
+;;(setq-default magit-gerrit-ssh-creds "myid@gerrithost.org")
+
+;; if necessary, use an alternative remote instead of 'origin'
+;;(setq-default magit-gerrit-remote "gerrit")
+
+;;(use-package magit-popup)
+#+END_SRC
 
    #+RESULTS:
 

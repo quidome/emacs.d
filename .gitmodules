@@ -1,9 +1,3 @@
-[submodule "magit-gerrit"]
-  path = packages/magit-gerrit
-  url = https://github.com/ispras/magit-gerrit.git
-[submodule "blaat"]
-	path = blaat
-	url = https://github.com/ispras/magit-gerrit.git
 [submodule "packages/magit-gerrit"]
 	path = packages/magit-gerrit
 	url = https://github.com/ispras/magit-gerrit.git

@@ -375,13 +375,6 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
                                            'split-window-vertically)))
    #+END_SRC
 
-** vterm
-#+BEGIN_SRC emacs-lisp
-(use-package vterm
-    :ensure t
-)
-#+END_SRC
-
 * Minor modes
 ** LSP
 

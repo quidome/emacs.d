@@ -13,9 +13,11 @@
 # Artifacts of running emacs
 custom.el
 elpa/
+eln-cache/
 network-security.data
 readme.el
 bookmarks
+projects
 themes
 ac-comphist.dat%
 auto-save

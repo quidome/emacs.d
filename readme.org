@@ -97,14 +97,6 @@
      (setq use-package-always-ensure t)
    #+END_SRC
 
-** Custom Packages
-   Add custom packages directory to the =load-path=.
-   #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path (concat user-emacs-directory "packages/"))
-  (add-to-list 'load-path (concat user-emacs-directory "packages/magit-gerrit"))
-
-   #+END_SRC
-
 * Generic configuration
 ** Personal choices
 #+BEGIN_SRC emacs-lisp
@@ -188,7 +180,6 @@
     :config
     (setq exec-path-from-shell-check-startup-files nil)
     (push "HISTFILE" exec-path-from-shell-variables)
-    (push "GERRIT_SSH_CREDS" exec-path-from-shell-variables)
     (exec-path-from-shell-initialize))
     #+END_SRC
 
@@ -482,28 +473,7 @@ Provides snippet support
   (use-package markdown-mode
     :mode ("\\.md\\'" . markdown-mode))
    #+End_SRC
-** Magit gerrit
 
-   #+BEGIN_SRC emacs-lisp-nonono
-     (use-package magit-gerrit
-       :after (magit magit))
-       :config (use-package magit-popup)
-   #+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(require 'magit-gerrit)
-
-;; if remote url is not using the default gerrit port and
-;; ssh scheme, need to manually set this variable
-;;(setq-default magit-gerrit-ssh-creds "myid@gerrithost.org")
-
-;; if necessary, use an alternative remote instead of 'origin'
-;;(setq-default magit-gerrit-remote "gerrit")
-
-;;(use-package magit-popup)
-#+END_SRC
-
-   #+RESULTS:
 
 ** Flycheck
    #+BEGIN_SRC emacs-lisp

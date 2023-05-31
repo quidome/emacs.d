@@ -252,7 +252,7 @@ Use theme based on settings of light-theme and dark-theme
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
      (when is-mac
-       (set-frame-font "JetBrainsMono Nerd Font 13"))
+       (set-frame-font "JetBrainsMono Nerd Font 14"))
 
      (when is-linux
        (set-frame-font "Source Code Pro Medium 10"))

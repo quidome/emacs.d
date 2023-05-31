@@ -429,9 +429,9 @@ completion-at-point also works out of the box but doesn't support snippets.
        (setq company-minimum-prefix-length 1))
 ;       :bind ("C-c c" . company-complete))
 
-     (use-package company-lsp
-       :ensure t
-       :commands company-lsp)
+;     (use-package company-lsp
+;       :ensure t
+;       :commands company-lsp)
    #+END_SRC
 
 ** Snippets
@@ -624,11 +624,6 @@ Use company for code completion.
 *** Pyenv
     #+BEGIN_SRC emacs-lisp
       (use-package pyenv-mode)
-    #+END_SRC
-
-    #+BEGIN_SRC emacs-lisp
-      (use-package pyenv-mode-auto
-        :after pyenv-mode)
     #+END_SRC
 
 *** autopep8

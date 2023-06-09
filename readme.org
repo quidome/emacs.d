@@ -255,7 +255,7 @@ Use theme based on settings of light-theme and dark-theme
        (set-frame-font "JetBrainsMono Nerd Font 14"))
 
      (when is-linux
-       (set-frame-font "Source Code Pro Medium 10"))
+       (set-frame-font "Jetbrainsmono Nerd Font 10"))
    #+END_SRC
 
 * Major modes

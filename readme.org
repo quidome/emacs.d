@@ -268,8 +268,7 @@ Use theme based on settings of light-theme and dark-theme
     (setq org-confirm-babel-evaluate nil))
    #+END_SRC
 
-** Project
-ile
+** Projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t

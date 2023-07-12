@@ -278,6 +278,12 @@ Use theme based on settings of light-theme and dark-theme
     (projectile-mode +1))
 #+END_SRC
 
+** Nix
+#+BEGIN_SRC emacs-lisp
+  (use-package nix-mode
+  :mode "\\.nix\\'")
+#+END_SRC
+
 ** Python
    #+BEGIN_SRC emacs-lisp
   (use-package python-mode

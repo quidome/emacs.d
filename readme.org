@@ -258,7 +258,6 @@ Use theme based on settings of light-theme and dark-theme
        (set-frame-font "JetBrainsmono Nerd Font 10"))
    #+END_SRC
 
-
 * Major modes
 ** Org mode
    #+BEGIN_SRC emacs-lisp
@@ -331,7 +330,6 @@ Use theme based on settings of light-theme and dark-theme
    #+BEGIN_SRC emacs-lisp
      (defun custom-go-mode ()
        (display-line-numbers-mode 1))
-
 
      (use-package go-mode
        :defer t
@@ -411,7 +409,6 @@ The Language Server protocol is used between a tool (the client) and a language 
     :init
   )
 
-
   (setq lsp-ui-doc-enable nil
 	lsp-ui-peek-enable t
 	lsp-ui-sideline-enable t
@@ -468,7 +465,6 @@ Provides snippet support
       )
     #+END_SRC
 
-
 *** Counsel
     #+BEGIN_SRC emacs-lisp
       (use-package counsel)
@@ -479,7 +475,6 @@ Provides snippet support
   (use-package markdown-mode
     :mode ("\\.md\\'" . markdown-mode))
    #+End_SRC
-
 
 ** Flycheck
    #+BEGIN_SRC emacs-lisp

@@ -267,15 +267,6 @@ Use theme based on settings of light-theme and dark-theme
     (setq org-confirm-babel-evaluate nil))
    #+END_SRC
 
-** Projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (projectile-mode +1))
-#+END_SRC
 
 ** Nix
 #+BEGIN_SRC emacs-lisp
@@ -342,11 +333,6 @@ Use theme based on settings of light-theme and dark-theme
        :bind (("M-," . compile)
 	      ("M-." . godef-jump)))
    #+END_SRC
-
-*** go projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package go-projectile)
-#+END_SRC
 
 ** Rust
 Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-development-with-emacs/][fancy rust development with emacs.]]

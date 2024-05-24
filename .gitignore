@@ -25,5 +25,6 @@ url/
 eshell/
 projectile-bookmarks.eld
 transient/
+/org-roam.db
 
 elpy/

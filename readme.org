@@ -267,6 +267,18 @@ Use theme based on settings of light-theme and dark-theme
     (setq org-confirm-babel-evaluate nil))
    #+END_SRC
 
+*** Org roam
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-roam
+       :ensure t
+       :custom
+       (org-roam-directory "~/Documents/Notes/Roam")
+       :bind (("C-c n l" . org-roam-buffer-toggle)
+	      ("C-c n f" . org-roam-node-find)
+	      ("C-c n i" . org-roam-node-insert))
+       :config
+       (org-roam-setup))
+   #+END_SRC
 
 ** Nix
 #+BEGIN_SRC emacs-lisp

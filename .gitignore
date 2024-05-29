@@ -28,3 +28,6 @@ transient/
 /org-roam.db
 
 elpy/
+/.lsp-session-v1
+/.org-id-locations
+/projectile.cache

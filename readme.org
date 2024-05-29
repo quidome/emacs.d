@@ -381,6 +381,19 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 #+END_SRC
 
 * Minor modes
+
+** Which key
+
+Which key will show a popup with all possible key-binds.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-node
+  :config
+  (setq which-key-idle-delay 0.3))
+#+END_SRC
+
 ** LSP
 
 The Language Server protocol is used between a tool (the client) and a language smartness provider (the server) to integrate features like auto complete, go to definition, find all references and alike into the tool.

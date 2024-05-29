@@ -280,6 +280,19 @@ Use theme based on settings of light-theme and dark-theme
        (org-roam-setup))
    #+END_SRC
 
+*** Org journal
+#+BEGIN_SRC emacs-lisp
+  (use-package org-journal
+    :ensure t
+    :defer t
+    :init
+    ;; Change default prefix key; needs to be set before loading org-journal
+    (setq org-journal-prefix-key "C-c j ")
+    :config
+    (setq org-journal-dir "~/Documents/Notes/Journal"
+	  org-journal-date-format "%A, %d %B %Y"))
+#+END_SRC
+
 ** Nix
 #+BEGIN_SRC emacs-lisp
   (use-package nix-mode

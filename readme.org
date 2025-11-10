@@ -257,7 +257,7 @@ Use theme based on settings of light-theme and dark-theme
        (set-frame-font "Roboto Mono Light for Powerline 14"))
 
      (when is-linux
-       (set-frame-font "Jetbrainsmono Nerd Font 10"))
+       (set-frame-font "RobotoMono Nerd Font Mono Lt:style=Light,Regular"))
    #+END_SRC
 
 * Major modes

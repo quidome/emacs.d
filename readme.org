@@ -237,10 +237,10 @@
 ** Themes
 Use theme based on settings of light-theme and dark-theme
 #+BEGIN_SRC emacs-lisp
-  (use-package plan9-theme
+  (use-package modus-themes
     :if light-theme
     :defer t
-    :init (load-theme 'plan9 t))
+    :init (load-theme 'modus-operandi t))
 
   (use-package material-theme
     :if dark-theme
@@ -252,7 +252,7 @@ Use theme based on settings of light-theme and dark-theme
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
      (when is-mac
-       (set-frame-font "JetBrainsMono Nerd Font 13"))
+       (set-frame-font "Roboto Mono Light for Powerline 14"))
 
      (when is-linux
        (set-frame-font "Jetbrainsmono Nerd Font 10"))

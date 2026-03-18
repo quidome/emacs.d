@@ -180,9 +180,9 @@
                   :ensure t
                   :config
                   (setq exec-path-from-shell-check-startup-files nil)
-                  (push "HISTFILE" exec-path-from-shell-variables)
+                  (dolist (var '("SSH_AUTH_SOCK" "HISTFILE"))
+                    (push var exec-path-from-shell-variables))
                   (exec-path-from-shell-initialize)
-                  (exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
       )
     #+END_SRC
 
@@ -233,17 +233,16 @@
   ;; File size
   (size-indication-mode t)
 
-  ;; Show funtion name in a mode line
-  (which-function-mode t)
     #+END_SRC
 
 ** Themes
 Use theme based on settings of light-theme and dark-theme
 #+BEGIN_SRC emacs-lisp
-  (use-package modus-themes
+  (use-package catppuccin-theme
     :if light-theme
-    :defer t
-    :init (load-theme 'modus-operandi t))
+    :config
+    (setq catppuccin-flavor 'latte)
+    (catppuccin-reload))
 
   (use-package material-theme
     :if dark-theme
@@ -255,7 +254,7 @@ Use theme based on settings of light-theme and dark-theme
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
      (when is-mac
-       (set-frame-font "Roboto Mono Light for Powerline 14"))
+       (set-frame-font "Robotomono Nerd Font Light"))
 
      (when is-linux
        (set-frame-font "RobotoMono Nerd Font Mono Lt:style=Light,Regular"))
@@ -274,6 +273,7 @@ Use theme based on settings of light-theme and dark-theme
    #+BEGIN_SRC emacs-lisp
      (use-package org-roam
        :ensure t
+       :after org
        :custom
        (org-roam-directory "~/Documents/Notes/Roam")
        :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -326,9 +326,7 @@ Use theme based on settings of light-theme and dark-theme
 ** YAML
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :init
-    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
+    :mode ("\\.yml\\'" "\\.yaml\\'"))
    #+END_SRC
 
 ** Puppet
@@ -354,8 +352,9 @@ Use theme based on settings of light-theme and dark-theme
        (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
        (setq compilation-read-command nil)
        (add-hook 'go-mode-hook 'custom-go-mode)
-       :bind (("M-," . compile)
-	      ("M-." . godef-jump)))
+       :bind (:map go-mode-map
+              ("M-," . compile)
+              ("M-." . godef-jump)))
    #+END_SRC
 
 ** Rust
@@ -371,6 +370,7 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 ** Ediff
    #+BEGIN_SRC emacs-lisp
      (use-package ediff
+       :ensure nil
        :bind (("C-c = b" . ediff-buffers))
        :init
        ;; fix ediff crash in Emacs GUI
@@ -502,7 +502,8 @@ Provides snippet support
    #+END_SRC
 *** Flycheck yamllint
     #+BEGIN_SRC emacs-lisp
-      (use-package flycheck-yamllint)
+      (use-package flycheck-yamllint
+        :after flycheck)
     #+END_SRC
 *** Flycheck bash
     #+BEGIN_SRC emacs-lisp
@@ -536,7 +537,8 @@ Use company for code completion.
 ** Alist
 
    #+BEGIN_SRC emacs-lisp
-     (use-package let-alist)
+     (use-package let-alist
+       :ensure nil)
    #+END_SRC
 ** Ruby
 *** Robe
@@ -544,7 +546,7 @@ Use company for code completion.
   (use-package robe
     :defer t
     :disabled t
-    :after ruby-mode
+    :after enh-ruby-mode
     :init
     (progn
       (add-hook 'ruby-mode-hook 'robe-mode)
@@ -572,7 +574,7 @@ Use company for code completion.
 		    enh-ruby-deep-indent-paren nil
 		    enh-ruby-bounce-deep-indent t
 		    enh-ruby-hanging-indent-level 2)
-	      (setq enh-ruby-program "/home/qmeijer/.rbenv/versions/2.4.9/bin/ruby")
+	      (setq enh-ruby-program (or (executable-find "ruby") "ruby"))
 	      (setq ruby-insert-encoding-magic-comment nil)))
 #+END_SRC
 
@@ -591,21 +593,21 @@ Use company for code completion.
 ** Neotree
    Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
    #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons)
+
      (use-package neotree
+       :after all-the-icons
        :config
-       (use-package all-the-icons)
        (global-set-key [s-XF86TouchpadToggle] 'neotree-toggle)
        (global-set-key [f8] 'neotree-toggle)
        (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
    #+END_SRC
 
 ** Rust addons
 *** Cargo
     #+BEGIN_SRC emacs-lisp
       (use-package cargo
-        :config
-        (add-hook 'rust-mode-hook 'cargo-minor-mode))
+        :hook (rust-mode . cargo-minor-mode))
     #+END_SRC
 ** Python
 *** Pyenv
@@ -623,9 +625,7 @@ Use company for code completion.
     ;; List of command line flags for rg.
     (setq rg-command-line-flags '())
     ;; Group matches in the same file together.
-    (setq rg-group-result t)
-    ;; wgrep compatibility (requires wgrep-ag.el)
-  )
+    (setq rg-group-result t))
 #+END_SRC
 
 ** wgrep

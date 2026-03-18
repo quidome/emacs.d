@@ -69,7 +69,6 @@
    Add package sources and initialize.
    #+BEGIN_SRC emacs-lisp
      (require 'package)
-     (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
      ;; (package-initialize)
    #+END_SRC
@@ -115,9 +114,11 @@
      (load custom-file 'noerror)
 
      ;; Save point position between sessions.
-     (use-package saveplace)
-     (setq-default save-place t)
-     (setq save-place-file (expand-file-name "places" user-emacs-directory))
+     (use-package saveplace
+       :ensure nil
+       :config
+       (save-place-mode 1)
+       (setq save-place-file (expand-file-name "places" user-emacs-directory)))
 
      ;; create auto-backup and auto-save location
      (make-directory "~/.emacs.d/auto-save/" t)
@@ -279,7 +280,7 @@ Use theme based on settings of light-theme and dark-theme
 	      ("C-c n f" . org-roam-node-find)
 	      ("C-c n i" . org-roam-node-insert))
        :config
-       (org-roam-setup))
+       (org-roam-db-autosync-mode))
    #+END_SRC
 
 *** Org journal
@@ -330,8 +331,8 @@ Use theme based on settings of light-theme and dark-theme
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :init
-    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-    (add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode)))
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
    #+END_SRC
 
 ** Puppet
@@ -387,12 +388,7 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 
 #+BEGIN_SRC emacs-lisp
   (use-package adoc-mode
-    :mode ("\\.adoc\\'" . adoc-mode)
-    :after auto-complete
-    :config
-    (add-to-list ‘ac-modes ‘adoc-mode))
-    (add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
-    :ensure t
+    :mode ("\\.adoc\\’"))
 #+END_SRC
 
 * Minor modes
@@ -404,7 +400,7 @@ Which key will show a popup with all possible key-binds.
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
   :init (which-key-mode)
-  :diminish which-key-node
+  :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
 #+END_SRC
@@ -417,29 +413,26 @@ The Language Server protocol is used between a tool (the client) and a language 
   (use-package lsp-mode
     :ensure t
     :commands (lsp lsp-deferred)
-    :hook (go-mode . lsp-deferred))
-
-  ;;Set up before-save hooks to format buffer and add/delete imports.
-  ;;Make sure you don't have other gofmt/goimports hooks enabled.
-
-  (defun lsp-go-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+    :hook (go-mode . lsp-deferred)
+    :config
+    ;; Format buffer and add/delete imports on save for Go.
+    ;; Make sure you don't have other gofmt/goimports hooks enabled.
+    (defun lsp-go-install-save-hooks ()
+      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+      (add-hook 'before-save-hook #'lsp-organize-imports t t))
+    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
   ;;Optional - provides fancier overlays.
 
   (use-package lsp-ui
     :ensure t
     :commands lsp-ui-mode
-    :init
-  )
-
-  (setq lsp-ui-doc-enable nil
-	lsp-ui-peek-enable t
-	lsp-ui-sideline-enable t
-	lsp-ui-imenu-enable t
-	lsp-ui-flycheck-enable t)
+    :config
+    (setq lsp-ui-doc-enable nil
+          lsp-ui-peek-enable t
+          lsp-ui-sideline-enable t
+          lsp-ui-imenu-enable t
+          lsp-ui-flycheck-enable t))
 #+END_SRC
 
 ** Company

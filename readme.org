@@ -304,15 +304,11 @@ Use theme based on settings of light-theme and dark-theme
 
 ** Python
    #+BEGIN_SRC emacs-lisp
-  (use-package python-mode
-    :mode ("\\.py\\'")
-    :interpreter "python3")
+  (use-package python
+    :ensure nil
+    :mode ("\\.py\\'" . python-mode)
+    :interpreter ("python3" . python-mode))
    #+END_SRC
-
-** Ruby
-#+BEGIN_SRC emacs-lisp
-  (use-package ruby-mode)
-#+END_SRC
 
 ** Magit
    [[https://github.com/magit/magit][Magit]] is the ultimate =git= interface for Emacs.
@@ -413,7 +409,9 @@ The Language Server protocol is used between a tool (the client) and a language 
   (use-package lsp-mode
     :ensure t
     :commands (lsp lsp-deferred)
-    :hook (go-mode . lsp-deferred)
+    :hook ((go-mode . lsp-deferred)
+           (rust-mode . lsp-deferred)
+           (python-mode . lsp-deferred))
     :config
     ;; Format buffer and add/delete imports on save for Go.
     ;; Make sure you don't have other gofmt/goimports hooks enabled.
@@ -437,9 +435,7 @@ The Language Server protocol is used between a tool (the client) and a language 
 
 ** Company
 
-[[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything" and works well with lsp-mode.
-company-lsp integrates company mode completion with lsp-mode.
-completion-at-point also works out of the box but doesn't support snippets.
+[[http://company-mode.github.io/][Company]] is a text completion framework for Emacs. It stands for "complete anything" and integrates with lsp-mode via =company-capf= automatically.
 
    #+BEGIN_SRC emacs-lisp
      (use-package company
@@ -449,11 +445,6 @@ completion-at-point also works out of the box but doesn't support snippets.
        (global-company-mode 1)
        (setq company-idle-delay 0)
        (setq company-minimum-prefix-length 1))
-;       :bind ("C-c c" . company-complete))
-
-;     (use-package company-lsp
-;       :ensure t
-;       :commands company-lsp)
    #+END_SRC
 
 ** Snippets
@@ -616,75 +607,10 @@ Use company for code completion.
         :config
         (add-hook 'rust-mode-hook 'cargo-minor-mode))
     #+END_SRC
-*** Racer
-    #+BEGIN_SRC emacs-lisp
-      (use-package racer
-        :config
-        (setq racer-cmd "~/.cargo/bin/racer") ;; Rustup binaries PATH
-        (setq racer-rust-src-path "/Users/qmeijer/code/rust/src") ;; Rust source code PATH
-
-        (add-hook 'rust-mode-hook #'racer-mode)
-        (add-hook 'racer-mode-hook #'eldoc-mode)
-        (add-hook 'racer-mode-hook #'company-mode))
-    #+END_SRC
-
 ** Python
-*** Company Jedi
-    #+BEGIN_SRC emacs-lisp
-      (use-package company-jedi
-        :disabled t
-        :config
-        (defun psachin/python-mode-hook ()
-          (add-to-list 'company-backends 'company-jedi))
-
-        (add-hook 'python-mode-hook 'psachin/python-mode-hook))
-    #+END_SRC
 *** Pyenv
     #+BEGIN_SRC emacs-lisp
       (use-package pyenv-mode)
-    #+END_SRC
-
-*** autopep8
-    #+BEGIN_SRC emacs-lisp
-      (use-package py-autopep8)
-    #+END_SRC
-
-*** Elpy
-    #+BEGIN_SRC emacs-lisp
-      ;; Elpy
-      (use-package elpy
-        :diminish elpy-mode
-        :init
-        (setq
-         ;; Referred from:
-         ;; https://github.com/ajschumacher/.emacs.d/blob/master/init.el
-         ;; sudo dnf install python-jedi python3-jedi -y
-         elpy-rpc-backend "jedi"
-         help-at-pt-timer-delay 0.9
-         help-at-pt-display-when-idle t
-         tab-width 4)
-
-        :config
-        (elpy-enable)
-        ;; Don't use flymake if flycheck is available
-        (when (require 'flycheck nil t)
-          (setq elpy-module
-                (delq 'elpy-module-flymake elpy-modules)))
-
-        ;; Enable flycheck and pep8
-        (add-hook 'elpy-mode-hook 'flycheck-mode)
-
-        ;; Following gives problem when python code used in reveal.js
-        ;; presentation.
-        ;; (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
-        ;; Do not highlight indentation
-        (delete 'elpy-module-highlight-indentation elpy-modules)
-
-        ;; I use this keys for window (re)size
-        (eval-after-load "elpy"
-          '(cl-dolist (key '("C-<up>" "C-<down>" "C-<left>" "C-<right>"))
-             (define-key elpy-mode-map (kbd key) nil))))
     #+END_SRC
 * Other packages
 ** ripgrep

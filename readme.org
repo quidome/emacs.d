@@ -326,7 +326,18 @@ Use theme based on settings of light-theme and dark-theme
 ** YAML
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
-    :mode ("\\.yml\\'" "\\.yaml\\'"))
+    :mode ("\\.yml\\'" "\\.yaml\\'")
+    :hook ((yaml-mode . lsp-deferred)
+           (yaml-mode . (lambda ()
+                          (setq-local indent-tabs-mode nil)
+                          (setq-local tab-width 2)
+                          (setq-local yaml-indent-offset 2)
+                          (flycheck-disable-checker 'yaml-ruby)))
+           (yaml-mode . (lambda ()
+                          (when (or (string-match "tasks/" (buffer-file-name))
+                                    (string-match "handlers/" (buffer-file-name))
+                                    (string-match "playbook" (buffer-file-name)))
+                            (ansible 1))))))
    #+END_SRC
 
 ** Puppet
@@ -503,7 +514,9 @@ Provides snippet support
 *** Flycheck yamllint
     #+BEGIN_SRC emacs-lisp
       (use-package flycheck-yamllint
-        :after flycheck)
+        :after flycheck
+        :init
+        (flycheck-yamllint-setup))
     #+END_SRC
 *** Flycheck bash
     #+BEGIN_SRC emacs-lisp

@@ -323,6 +323,13 @@ Use theme based on settings of light-theme and dark-theme
     (setq magit-branch-read-upstream-first nil))
    #+END_SRC
 
+** claude-code
+#+BEGIN_SRC emacs-lisp
+  (use-package claude-code
+    :bind (("C-c c" . claude-code-chat)
+           ("C-c C-c" . claude-code-send-region)))
+#+END_SRC
+
 ** YAML
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
@@ -395,7 +402,42 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 
 #+BEGIN_SRC emacs-lisp
   (use-package adoc-mode
-    :mode ("\\.adoc\\’"))
+    :mode ("\\.adoc\\'"))
+#+END_SRC
+
+** vterm
+#+BEGIN_SRC emacs-lisp
+  (use-package vterm
+    :ensure is-mac  ; install from MELPA on macOS, nix-managed on Linux
+    :bind (("C-c t" . vterm)
+           ("C-c T" . vterm-other-window))
+    :config
+    ;; Maximum scrollback lines
+    (setq vterm-max-scrollback 10000)
+
+    ;; Kill buffer when vterm process exits
+    (setq vterm-kill-buffer-on-exit t)
+
+    ;; Don't query before killing vterm buffers
+    (setq vterm-always-compile-module t)
+
+    ;; Disable line numbers in vterm buffers (improves performance)
+    (add-hook 'vterm-mode-hook
+              (lambda ()
+                (display-line-numbers-mode -1)))
+
+    ;; Set shell (optional - defaults to $SHELL)
+    ;; (setq vterm-shell "/bin/bash")
+
+    ;; Performance: use nil for better responsiveness
+    (setq vterm-timer-delay nil))
+
+  ;; multi-vterm for better multiple terminal management
+  (use-package multi-vterm
+    :ensure is-mac
+    :bind (("C-c m t" . multi-vterm)
+           ("C-c m n" . multi-vterm-next)
+           ("C-c m p" . multi-vterm-prev)))
 #+END_SRC
 
 * Minor modes

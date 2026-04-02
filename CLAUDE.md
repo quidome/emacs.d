@@ -17,7 +17,7 @@ The entire configuration lives in `readme.org` as a single org file with section
 - **Appearance** — powerline modeline, catppuccin theme (light) or material (dark) controlled by `light-theme`/`dark-theme` variables at top of Generic configuration section; font is JetBrainsMono Nerd Font on both platforms
 - **Major modes** — org/org-roam/org-journal, nix-mode, python, ruby/enh-ruby-mode, magit, yaml, go-mode, rust-mode, ediff, asciidoc
 - **Minor modes** — which-key, lsp-mode + lsp-ui (hooked to go-mode), company, yasnippet, ivy/swiper/counsel, markdown, flycheck (+yamllint/bashate/rust), ansible, jinja2
-- **Other packages** — ripgrep (`rg`), wgrep
+- **Other packages** — ripgrep (`rg`), wgrep, vterm + multi-vterm (macOS; needs `cmake`), claude-code (wraps Claude Code CLI in vterm)
 - **Custom functions** — `buffer-list-moveto` bound to `C-x C-b`
 
 ## Key bindings defined in config
@@ -33,6 +33,10 @@ The entire configuration lives in `readme.org` as a single org file with section
 | `C-c = b` | ediff-buffers |
 | `F8` | neotree-toggle |
 | Shift+arrows | windmove (window focus) |
+| `C-c c` | claude-code transient |
+| `C-c C-c` | send region to Claude |
+| `C-c t` / `C-c T` | vterm / vterm-other-window |
+| `C-c m t/n/p` | multi-vterm new/next/prev |
 
 ## Notes
 

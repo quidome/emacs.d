@@ -324,10 +324,29 @@ Use theme based on settings of light-theme and dark-theme
    #+END_SRC
 
 ** claude-code
+
+AI assistant integration using the [[https://github.com/stevemolitor/claude-code.el][claude-code.el]] package, which wraps the Claude Code CLI (~claude~ command) inside a vterm buffer.
+
+*Prerequisites:* The ~claude~ CLI must be installed and on ~$PATH~. Install via npm:
+#+BEGIN_SRC sh
+npm install -g @anthropic-ai/claude-code
+#+END_SRC
+
+The package is not on MELPA; it is loaded from a local checkout or via ~straight.el~ / ~elpaca~. Key bindings:
+
+| Key       | Command                    |
+|-----------+----------------------------|
+| ~C-c c~   | Open claude-code transient |
+| ~C-c C-c~ | Send region to Claude      |
+
 #+BEGIN_SRC emacs-lisp
   (use-package claude-code
-    :bind (("C-c c" . claude-code-chat)
-           ("C-c C-c" . claude-code-send-region)))
+    :bind (("C-c c" . claude-code-transient)
+           ("C-c C-c" . claude-code-send-region))
+    :config
+    (setq projectile-project-root-functions
+          (append projectile-project-root-functions
+                  '((lambda () default-directory)))))
 #+END_SRC
 
 ** YAML
@@ -406,9 +425,33 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 #+END_SRC
 
 ** vterm
+
+Fast terminal emulator based on [[https://github.com/akermu/emacs-libvterm][libvterm]]. Requires a native compiled module (~vterm-module.so~) which Emacs builds automatically on first use — libvterm source is bundled with the package, no system install needed.
+
+*Dependencies differ by platform:*
+
+- *macOS (Homebrew):* Only ~cmake~ and a C compiler (~clang~ from Xcode Command Line Tools) are required. Install cmake with:
+  #+BEGIN_SRC sh
+  brew install cmake
+  #+END_SRC
+  The ~:if is-mac~ guard reflects that this is only tested/configured for macOS currently.
+
+- *NixOS:* The ~emacs-libvterm~ package ships a pre-built module, so no local compilation is needed. Add ~pkgs.emacsPackages.vterm~ to your Emacs packages in home-manager and remove or adjust the ~:if is-mac~ guard.
+
+Key bindings:
+
+| Key       | Command                       |
+|-----------+-------------------------------|
+| ~C-c t~   | Open vterm                    |
+| ~C-c T~   | Open vterm in other window    |
+| ~C-c m t~ | New multi-vterm terminal      |
+| ~C-c m n~ | Next multi-vterm terminal     |
+| ~C-c m p~ | Previous multi-vterm terminal |
+
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
-    :ensure is-mac  ; install from MELPA on macOS, nix-managed on Linux
+    :if is-mac
+    :ensure t
     :bind (("C-c t" . vterm)
            ("C-c T" . vterm-other-window))
     :config
@@ -434,7 +477,8 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
 
   ;; multi-vterm for better multiple terminal management
   (use-package multi-vterm
-    :ensure is-mac
+    :if is-mac
+    :ensure t
     :bind (("C-c m t" . multi-vterm)
            ("C-c m n" . multi-vterm-next)
            ("C-c m p" . multi-vterm-prev)))

@@ -614,17 +614,6 @@ Provides snippet support
         :init
         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
     #+END_SRC
-** ansible
-*** ansible itself
-#+BEGIN_SRC emacs-lisp
-  (use-package ansible)
-#+END_SRC
-
-*** company-ansible
-Use company for code completion.
-#+BEGIN_SRC emacs-lisp
-  (use-package company-ansible)
-#+END_SRC
 ** jinja2
 #+BEGIN_SRC emacs-lisp
   (use-package jinja2-mode

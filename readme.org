@@ -625,56 +625,6 @@ Provides snippet support
      (use-package let-alist
        :ensure nil)
    #+END_SRC
-** Ruby
-*** Robe
-#+BEGIN_SRC emacs-lisp
-  (use-package robe
-    :defer t
-    :disabled t
-    :after enh-ruby-mode
-    :init
-    (progn
-      (add-hook 'ruby-mode-hook 'robe-mode)
-      (with-eval-after-load 'company
-  (add-to-list 'company-backends 'company-robe))))
-#+END_SRC
-
-*** enhanced ruby mode
-#+BEGIN_SRC emacs-lisp
-  (use-package enh-ruby-mode
-    :defer t
-    :mode (("\\.rb\\'"       . enh-ruby-mode)
-	   ("\\.ru\\'"       . enh-ruby-mode)
-	   ("\\.jbuilder\\'" . enh-ruby-mode)
-	   ("\\.gemspec\\'"  . enh-ruby-mode)
-	   ("\\.rake\\'"     . enh-ruby-mode)
-	   ("Rakefile\\'"    . enh-ruby-mode)
-	   ("Gemfile\\'"     . enh-ruby-mode)
-	   ("Guardfile\\'"   . enh-ruby-mode)
-	   ("Capfile\\'"     . enh-ruby-mode)
-	   ("Vagrantfile\\'" . enh-ruby-mode))
-    :config (progn
-	      (setq enh-ruby-indent-level 2
-		    enh-ruby-add-encoding-comment-on-save nil
-		    enh-ruby-deep-indent-paren nil
-		    enh-ruby-bounce-deep-indent t
-		    enh-ruby-hanging-indent-level 2)
-	      (setq enh-ruby-program (or (executable-find "ruby") "ruby"))
-	      (setq ruby-insert-encoding-magic-comment nil)))
-#+END_SRC
-
-*** rbenv
-#+BEGIN_SRC emacs-lisp
-  (use-package rbenv
-    :defer t
-    :init
-    ;; (setq rbenv-installation-dir "/usr")
-    (setq rbenv-show-active-ruby-in-modeline nil)
-    :config (progn
-	      (global-rbenv-mode)
-	      (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)))
-#+END_SRC
-
 ** Neotree
    Thisone actually requires more work, see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] on how to install the extra icons needed.
    #+BEGIN_SRC emacs-lisp

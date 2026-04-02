@@ -275,7 +275,7 @@ Use theme based on settings of light-theme and dark-theme
        :ensure t
        :after org
        :custom
-       (org-roam-directory "~/Documents/Notes/Roam")
+       (org-roam-directory "~/Notes/Roam")
        :bind (("C-c n l" . org-roam-buffer-toggle)
 	      ("C-c n f" . org-roam-node-find)
 	      ("C-c n i" . org-roam-node-insert))
@@ -292,7 +292,7 @@ Use theme based on settings of light-theme and dark-theme
     ;; Change default prefix key; needs to be set before loading org-journal
     (setq org-journal-prefix-key "C-c j ")
     :config
-    (setq org-journal-dir "~/Documents/Notes/Journal"
+    (setq org-journal-dir "~/Notes/Journal"
 	  org-journal-date-format "%A, %d %B %Y"))
 #+END_SRC
 

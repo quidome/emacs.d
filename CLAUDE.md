@@ -15,8 +15,8 @@ The entire configuration lives in `readme.org` as a single org file with section
 - **Package management** — MELPA + `use-package` with `:ensure t` by default
 - **Generic configuration** — `is-mac` / `is-linux` variables used for OS branching; `custom.el` kept separate; backup/auto-save redirected to `auto-backup/` and `auto-save/`
 - **Appearance** — powerline modeline, catppuccin theme (light) or material (dark) controlled by `light-theme`/`dark-theme` variables at top of Generic configuration section; font is JetBrainsMono Nerd Font on both platforms
-- **Major modes** — org/org-roam/org-journal, nix-mode, python, ruby/enh-ruby-mode, magit, yaml, go-mode, rust-mode, ediff, asciidoc
-- **Minor modes** — which-key, lsp-mode + lsp-ui (hooked to go-mode), company, yasnippet, ivy/swiper/counsel, markdown, flycheck (+yamllint/bashate/rust), ansible, jinja2
+- **Major modes** — org/org-roam/org-journal, nix-mode, python, magit, yaml, go-mode, rust-mode, ediff, asciidoc
+- **Minor modes** — which-key, lsp-mode + lsp-ui (hooked to go-mode), company, yasnippet, ivy/swiper/counsel, markdown, flycheck (+yamllint/bashate/rust), jinja2
 - **Other packages** — ripgrep (`rg`), wgrep, vterm + multi-vterm (macOS; needs `cmake`), claude-code (wraps Claude Code CLI in vterm)
 - **Custom functions** — `buffer-list-moveto` bound to `C-x C-b`
 

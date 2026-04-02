@@ -353,28 +353,25 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :mode ("\\.yml\\'" "\\.yaml\\'")
+    :config
+    (setq lsp-enable-symbol-highlighting nil)
     :hook ((yaml-mode . lsp-deferred)
            (yaml-mode . (lambda ()
                           (setq-local indent-tabs-mode nil)
                           (setq-local tab-width 2)
-                          (setq-local yaml-indent-offset 2)
-                          (flycheck-disable-checker 'yaml-ruby)))
-           (yaml-mode . (lambda ()
-                          (when (or (string-match "tasks/" (buffer-file-name))
-                                    (string-match "handlers/" (buffer-file-name))
-                                    (string-match "playbook" (buffer-file-name)))
-                            (ansible 1))))))
+                          (setq-local yaml-indent-offset 2))))
    #+END_SRC
 
-** Puppet
+   ;; re-fontify after LSP connects to restore yaml-mode highlighting
    #+BEGIN_SRC emacs-lisp
-     (use-package puppet-mode)
+  (add-hook 'lsp-after-open-hook
+            (lambda ()
+              (let ((buf (current-buffer)))
+                (run-with-idle-timer 0.5 nil
+                                     (lambda ()
+                                       (with-current-buffer buf
+                                         (font-lock-fontify-buffer)))))))
    #+END_SRC
-
-** Rspec
-#+BEGIN_SRC emacs-lisp
-  (use-package rspec-mode)
-#+END_SRC
 
 ** Golang
    #+BEGIN_SRC emacs-lisp

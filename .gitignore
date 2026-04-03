@@ -32,3 +32,5 @@ elpy/
 /.org-id-locations
 /projectile.cache
 /places
+/.claude/settings.local.json
+/.cache/

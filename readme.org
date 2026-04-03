@@ -359,7 +359,7 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
            (yaml-mode . (lambda ()
                           (setq-local indent-tabs-mode nil)
                           (setq-local tab-width 2)
-                          (setq-local yaml-indent-offset 2))))
+                          (setq-local yaml-indent-offset 2)))))
    #+END_SRC
 
    ;; re-fontify after LSP connects to restore yaml-mode highlighting

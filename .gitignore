@@ -31,3 +31,4 @@ elpy/
 /.lsp-session-v1
 /.org-id-locations
 /projectile.cache
+/places

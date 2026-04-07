@@ -212,7 +212,7 @@
     (setq powerline-display-buffer-size nil)
     (setq powerline-display-mule-info nil)
     (setq powerline-display-hud nil)
-    (setq powerline-default-separator 'utf-8)
+    (setq powerline-default-separator 'arrow)
     :config
     (which-function-mode)
     (powerline-default-theme))
@@ -345,6 +345,8 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
     :after vterm
     :bind (("C-c c" . claude-code-transient)
            ("C-c C-c" . claude-code-send-region))
+    :init
+    (require 'vterm)
     :config
     (setq projectile-project-root-functions
           (append projectile-project-root-functions
@@ -501,12 +503,19 @@ Which key will show a popup with all possible key-binds.
 The Language Server protocol is used between a tool (the client) and a language smartness provider (the server) to integrate features like auto complete, go to definition, find all references and alike into the tool.
 
 #+BEGIN_SRC emacs-lisp
+  (use-package nerd-icons
+    :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :ensure t
     :commands (lsp lsp-deferred)
     :hook ((go-mode . lsp-deferred)
            (rust-mode . lsp-deferred)
            (python-mode . lsp-deferred))
+    :init
+    (setq lsp-headerline-breadcrumb-icons-enable nil)
     :config
     ;; Format buffer and add/delete imports on save for Go.
     ;; Make sure you don't have other gofmt/goimports hooks enabled.

@@ -429,9 +429,8 @@ Fast terminal emulator based on [[https://github.com/akermu/emacs-libvterm][libv
   #+BEGIN_SRC sh
   brew install cmake
   #+END_SRC
-  The ~:if is-mac~ guard reflects that this is only tested/configured for macOS currently.
 
-- *NixOS:* The ~emacs-libvterm~ package ships a pre-built module, so no local compilation is needed. Add ~pkgs.emacsPackages.vterm~ to your Emacs packages in home-manager and remove or adjust the ~:if is-mac~ guard.
+- *NixOS:* The ~emacs-libvterm~ package ships a pre-built module, so no local compilation is needed. Add ~pkgs.emacsPackages.vterm~ to your Emacs packages in home-manager.
 
 Key bindings:
 

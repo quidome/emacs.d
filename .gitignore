@@ -34,3 +34,4 @@ elpy/
 /places
 /.claude/settings.local.json
 /.cache/
+.dap-breakpoints

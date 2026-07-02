@@ -99,8 +99,7 @@
 * Generic configuration
 ** Personal choices
 #+BEGIN_SRC emacs-lisp
-  ;; Choose whether to theme light or dark
-  (setq light-theme 1)
+  ;; Set t for dark theme, nil for light
   (setq dark-theme nil)
 #+END_SRC
 
@@ -239,15 +238,9 @@
 Use theme based on settings of light-theme and dark-theme
 #+BEGIN_SRC emacs-lisp
   (use-package catppuccin-theme
-    :if light-theme
     :config
-    (setq catppuccin-flavor 'latte)
+    (setq catppuccin-flavor (if dark-theme 'mocha 'latte))
     (catppuccin-reload))
-
-  (use-package material-theme
-    :if dark-theme
-    :defer t
-    :init (load-theme 'material t))
 #+END_SRC
 
 ** Fonts
@@ -399,6 +392,21 @@ Current rust config is based on [[http://julienblanchard.com/2016/fancy-rust-dev
                    (local-set-key (kbd "C-c <tab>") #'rust-format-buffer))))
    #+END_SRC
 
+** Java & Kotlin
+   `lsp-java` auto-downloads Eclipse JDT Language Server and Spring Tools 4 on first use (~150MB into `~/.emacs.d/eclipse.jdt.ls/`). Kotlin LSP requires =kotlin-language-server= on PATH (=brew install kotlin-language-server=).
+   #+BEGIN_SRC emacs-lisp
+     (use-package kotlin-mode
+       :ensure t
+       :mode ("\\.kt\\'" . kotlin-mode))
+
+     (use-package lsp-java
+       :ensure t
+       :after lsp-mode
+       :hook (java-mode . lsp-deferred)
+       :config
+       (setq lsp-java-boot-enabled t))
+   #+END_SRC
+
 ** Ediff
    #+BEGIN_SRC emacs-lisp
      (use-package ediff
@@ -506,7 +514,8 @@ The Language Server protocol is used between a tool (the client) and a language 
     :commands (lsp lsp-deferred)
     :hook ((go-mode . lsp-deferred)
            (rust-mode . lsp-deferred)
-           (python-mode . lsp-deferred))
+           (python-mode . lsp-deferred)
+           (kotlin-mode . lsp-deferred))
     :init
     (setq lsp-headerline-breadcrumb-icons-enable nil)
     :config
@@ -515,7 +524,10 @@ The Language Server protocol is used between a tool (the client) and a language 
     (defun lsp-go-install-save-hooks ()
       (add-hook 'before-save-hook #'lsp-format-buffer t t)
       (add-hook 'before-save-hook #'lsp-organize-imports t t))
-    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+    (defun lsp-kotlin-install-save-hooks ()
+      (add-hook 'before-save-hook #'lsp-format-buffer t t))
+    (add-hook 'kotlin-mode-hook #'lsp-kotlin-install-save-hooks))
 
   ;;Optional - provides fancier overlays.
 
@@ -616,6 +628,15 @@ Provides snippet support
       (use-package flycheck-rust
         :init
         (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+    #+END_SRC
+*** Flycheck kotlin
+    Requires =ktlint= on PATH (=brew install ktlint=).
+    #+BEGIN_SRC emacs-lisp
+      (use-package flycheck-kotlin
+        :ensure t
+        :after flycheck
+        :init
+        (flycheck-kotlin-setup))
     #+END_SRC
 ** jinja2
 #+BEGIN_SRC emacs-lisp

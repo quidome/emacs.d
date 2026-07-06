@@ -498,6 +498,16 @@ Key bindings:
 
 * Minor modes
 
+** Envrc / direnv
+
+Load project-local =.envrc= files into Emacs buffers via [[https://github.com/purcell/envrc][envrc.el]]. Requires the =direnv= CLI and an allowed =.envrc=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package envrc
+    :ensure t
+    :hook (after-init . envrc-global-mode))
+#+END_SRC
+
 ** Which key
 
 Which key will show a popup with all possible key-binds.

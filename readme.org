@@ -178,7 +178,7 @@
                   :ensure t
                   :config
                   (setq exec-path-from-shell-check-startup-files nil)
-                  (dolist (var '("SSH_AUTH_SOCK" "HISTFILE"))
+                  (dolist (var '("SSH_AUTH_SOCK" "HISTFILE" "EMACS_TREE_SITTER_PATH"))
                     (push var exec-path-from-shell-variables))
                   (exec-path-from-shell-initialize)
       )
@@ -385,13 +385,21 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
    #+END_SRC
 
 ** Rust
-Modern Rust support uses =rust-analyzer= via =lsp-mode=. On Emacs 30+, prefer built-in tree-sitter Rust support, while keeping =rust-mode= as a fallback where needed.
+Modern Rust support uses =rust-analyzer= via =lsp-mode=. On Emacs 30+, use built-in tree-sitter Rust only when the Rust grammar is actually installed; otherwise force =rust-mode= to avoid startup warnings.
    #+BEGIN_SRC emacs-lisp
-     (when (fboundp 'rust-ts-mode)
-       (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode)))
+     (when-let ((dir (getenv "EMACS_TREE_SITTER_PATH")))
+       (add-to-list 'treesit-extra-load-path dir))
+
+     (defun custom-rust-major-mode ()
+       (if (and (fboundp 'rust-ts-mode)
+                (fboundp 'treesit-ready-p)
+                (treesit-ready-p 'rust t))
+           (rust-ts-mode)
+         (rust-mode)))
+
+     (add-to-list 'auto-mode-alist '("\\.rs\\'" . custom-rust-major-mode))
 
      (use-package rust-mode
-       :mode "\\.rs\\'"
        :init
        (setq rust-format-on-save nil)
        :hook ((rust-mode . (lambda ()

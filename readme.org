@@ -426,6 +426,13 @@ Modern Rust support uses =rust-analyzer= via =lsp-mode=. On Emacs 30+, use built
        (setq lsp-java-boot-enabled t))
    #+END_SRC
 
+** Envrc
+#+BEGIN_SRC emacs-lisp
+   (use-package envrc
+  :config
+  (envrc-global-mode))
+#+END_SRC
+
 ** Ediff
    #+BEGIN_SRC emacs-lisp
      (use-package ediff

@@ -475,6 +475,11 @@ Key bindings:
     :bind (("C-c t" . vterm)
            ("C-c T" . vterm-other-window))
     :config
+    ;; Advertise terminal background so tools like Claude Code detect the theme.
+    ;; COLORFGBG last segment: 0-6 = dark, 7-15 = light.
+    (setq vterm-environment
+          (list (concat "COLORFGBG=" (if dark-theme "15;0" "0;15"))))
+
     ;; Maximum scrollback lines
     (setq vterm-max-scrollback 10000)
 

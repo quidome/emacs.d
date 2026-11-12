@@ -246,7 +246,7 @@ Use theme based on settings of light-theme and dark-theme
    Set font for graphical mode.
    #+BEGIN_SRC emacs-lisp
      (when is-mac
-       (set-frame-font "JetBrainsMono Nerd Font-13"))
+       (set-frame-font "JetBrainsMono Nerd Font-14"))
 
      (when is-linux
        (set-frame-font "JetBrainsMono Nerd Font Mono-13"))
@@ -336,8 +336,8 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
 
 #+BEGIN_SRC emacs-lisp
   (use-package claude-code
-    :ensure t
     :after vterm
+    :demand t
     :bind (("C-c c" . claude-code-transient)
            ("C-c C-c" . claude-code-send-region)))
 #+END_SRC
@@ -346,8 +346,6 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
    #+BEGIN_SRC emacs-lisp
   (use-package yaml-mode
     :mode ("\\.yml\\'" "\\.yaml\\'")
-    :config
-    (setq lsp-enable-symbol-highlighting nil)
     :hook ((yaml-mode . lsp-deferred)
            (yaml-mode . (lambda ()
                           (setq-local indent-tabs-mode nil)
@@ -359,11 +357,12 @@ The package is not on MELPA; it is loaded from a local checkout or via ~straight
   ;; re-fontify after LSP connects to restore yaml-mode highlighting
   (add-hook 'lsp-after-open-hook
             (lambda ()
-              (let ((buf (current-buffer)))
-                (run-with-idle-timer 0.5 nil
-                                     (lambda ()
-                                       (with-current-buffer buf
-                                         (font-lock-fontify-buffer)))))))
+              (when (derived-mode-p 'yaml-mode)
+                (let ((buf (current-buffer)))
+                  (run-with-idle-timer 0.5 nil
+                                       (lambda ()
+                                         (with-current-buffer buf
+                                           (font-lock-fontify-buffer))))))))
    #+END_SRC
 
 ** Golang
@@ -425,13 +424,6 @@ Modern Rust support uses =rust-analyzer= via =lsp-mode=. On Emacs 30+, use built
        :config
        (setq lsp-java-boot-enabled t))
    #+END_SRC
-
-** Envrc
-#+BEGIN_SRC emacs-lisp
-   (use-package envrc
-  :config
-  (envrc-global-mode))
-#+END_SRC
 
 ** Ediff
    #+BEGIN_SRC emacs-lisp
@@ -555,7 +547,8 @@ The Language Server protocol is used between a tool (the client) and a language 
            (kotlin-mode . lsp-deferred))
     :init
     (setq lsp-headerline-breadcrumb-icons-enable nil
-          lsp-rust-analyzer-cargo-watch-command "clippy")
+          lsp-rust-analyzer-cargo-watch-command "clippy"
+          lsp-enable-symbol-highlighting nil)
     :config
     ;; Format buffer and add/delete imports on save for Go.
     ;; Make sure you don't have other gofmt/goimports hooks enabled.
@@ -710,14 +703,12 @@ Modern Emacs completion works well with =vertico=, =orderless=, =marginalia=, an
 ** Neotree
    This one requires a bit more work; see [[https://github.com/domtronn/all-the-icons.el][https://github.com/domtronn/all-the-icons.el]] for how to install the extra icons.
    #+BEGIN_SRC emacs-lisp
-     (use-package all-the-icons)
-
      (use-package neotree
-       :after all-the-icons
+       :after nerd-icons
        :config
        (global-set-key [s-XF86TouchpadToggle] 'neotree-toggle)
        (global-set-key [f8] 'neotree-toggle)
-       (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+       (setq neo-theme (if (display-graphic-p) 'nerd-icons 'arrow)))
    #+END_SRC
 
 ** Rust addons

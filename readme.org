@@ -138,6 +138,16 @@
      (setq create-lockfiles nil)
    #+END_SRC
 
+** Server
+   Start the Emacs server so =emacsclient= can open files in a running instance.
+   #+BEGIN_SRC emacs-lisp
+     (use-package server
+       :ensure nil
+       :config
+       (unless (server-running-p)
+         (server-start)))
+   #+END_SRC
+
 ** Many things
    Some essential generic configuration.
    #+BEGIN_SRC emacs-lisp

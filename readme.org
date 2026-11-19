@@ -508,7 +508,12 @@ Key bindings:
     ;; (setq vterm-shell "/bin/bash")
 
     ;; Performance: use nil for better responsiveness
-    (setq vterm-timer-delay nil))
+    (setq vterm-timer-delay nil)
+
+    ;; Send kitty keyboard protocol sequence for Shift+Enter so apps like
+    ;; Claude Code can insert a newline without submitting.
+    (define-key vterm-mode-map (kbd "S-<return>")
+      (lambda () (interactive) (vterm-send-string "\e[13;2u"))))
 
   ;; multi-vterm for better multiple terminal management
   (use-package multi-vterm
